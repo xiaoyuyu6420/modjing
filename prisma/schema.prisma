@@ -1,0 +1,112 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Site {
+  id             Int      @id @default(autoincrement())
+  name           String
+  url            String
+  logo           String?
+  description    String?
+  announcement   String?
+  isFree         Boolean  @default(false)
+  status         String   @default("online") // online | unstable | offline
+  paymentMethods String   @default("") // 逗号分隔：支付宝,微信,USDT,Stripe,Invoice
+  hasInvoice     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  // === 企业合规扩展 ===
+  invoiceTypes         String   @default("") // 增值税普票,专票,电子发票
+  invoiceProvider      String?               // 开票主体名称
+  complianceLevel      String?               // none | basic | iso27001 | mlps2 | mlps3
+  complianceProof      String?               // 认证证书 URL
+  dataLocation         String?               // CN | US | EU | Mixed
+  dataRetention        String?               // 数据留存策略
+  hasEnterpriseAccount Boolean  @default(false)
+  hasSubAccounts       Boolean  @default(false)
+  slaUptime            Float?                // 承诺在线率（如 99.9）
+  slaResponseTime      Int?                  // 故障响应时间（分钟）
+  has24x7Support       Boolean  @default(false)
+  hasContractTemplate  Boolean  @default(false)
+  contractProcess      String?               // 合同签署流程描述
+  minContractAmount    Float?                // 最低合同金额
+
+  modelPrices  SiteModelPrice[]
+  healthChecks HealthCheck[]
+  reviews      Review[]
+  notices      RelayNotice[]
+}
+
+model SiteModelPrice {
+  id            Int     @id @default(autoincrement())
+  siteId        Int
+  modelName     String
+  price         Float
+  priceUnit     String  @default("per_million_tokens")
+  multiplier    Float   @default(1.0)
+  afterSales    String  @default("none") // none | verify_once | days_30 | lifetime
+  priceAnomaly  Boolean @default(false)
+  detectedModel String?
+  tampered      Boolean @default(false)
+
+  // === 探针结果（从 hvoy 消费或自建探针填入）===
+  passRate      Float?    // 通过率 %
+  onlineRate    Float?    // 在线率 %
+  fakeRateBand  String?   // minimal | low | light | severe
+  avgLatencyMs  Int?      // 平均延迟
+  lastProbedAt  DateTime?
+  weightedScore Float?    // 综合评分
+
+  site          Site    @relation(fields: [siteId], references: [id])
+  priceHistory  PriceHistory[]
+
+  @@unique([siteId, modelName])
+}
+
+model PriceHistory {
+  id               Int      @id @default(autoincrement())
+  siteModelPriceId Int
+  price            Float
+  recordedAt       DateTime @default(now())
+
+  siteModelPrice   SiteModelPrice @relation(fields: [siteModelPriceId], references: [id])
+}
+
+model HealthCheck {
+  id        Int      @id @default(autoincrement())
+  siteId    Int
+  latency   Int      // ms
+  status    String   @default("ok") // ok | slow | timeout | error
+  checkedAt DateTime @default(now())
+
+  site      Site     @relation(fields: [siteId], references: [id])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  siteId    Int
+  author    String
+  content   String
+  rating    Int      // 1-5
+  createdAt DateTime @default(now())
+
+  site      Site     @relation(fields: [siteId], references: [id])
+}
+
+model RelayNotice {
+  id           Int       @id @default(autoincrement())
+  siteId       Int
+  sourceType   String    @default("manual") // manual | hvoy | crawl
+  noticeText   String
+  noticeUrl    String?
+  tagCategory  String    @default("notice") // important | maintenance | update | pricing | promotion | notice
+  publishedAt  DateTime?
+  fetchedAt    DateTime  @default(now())
+
+  site         Site      @relation(fields: [siteId], references: [id])
+}
