@@ -1,0 +1,126 @@
+const PLANS = [
+  {
+    platform: 'GPT Plus（土区）',
+    price: '¥80 / 月',
+    models: 'GPT-5.5 / GPT-5.4 / gpt-image-2',
+    pros: '性价比高，能跑出 $400 token 等值用量',
+    cons: '需要土区 Apple ID，订阅链路复杂',
+  },
+  {
+    platform: 'Claude Pro / Max',
+    price: '$20 - 200 / 月',
+    models: 'Claude Opus / Sonnet / Haiku',
+    pros: '代码质量最强，Max 套餐配额慷慨',
+    cons: '价格高，国内访问需要中转',
+  },
+  {
+    platform: 'Codex Plus',
+    price: '$20 / 月',
+    models: 'GPT-5.5 Codex',
+    pros: '编程专用，IDE 集成丝滑',
+    cons: '仅限编程场景，通用对话受限',
+  },
+  {
+    platform: 'Gemini Advanced',
+    price: '$20 / 月',
+    models: 'Gemini 3.1 Pro',
+    pros: '多模态强，2M context 王者',
+    cons: '中国大陆访问难，付款门槛高',
+  },
+  {
+    platform: '智谱 AI Pro',
+    price: '¥200 / 月',
+    models: 'GLM-5.1',
+    pros: '国产合规，发票/合同齐全',
+    cons: '推理在国内，国际化场景不适用',
+  },
+  {
+    platform: 'MiniMax Starter',
+    price: '¥99 / 月',
+    models: 'MiniMax-M2.7',
+    pros: '价格亲民，语音合成强',
+    cons: '模型综合能力一般',
+  },
+  {
+    platform: '阿里云百炼',
+    price: '按量付费',
+    models: 'Qwen3.6-max',
+    pros: '企业级稳定，配额可申请',
+    cons: '没有订阅套餐，重度用户成本高',
+  },
+]
+
+const RECOMMENDATIONS = [
+  { tag: '学生 / 低频用户', plan: 'GPT Plus 土区', reason: '¥80/月跑出 $20 等值，性价比天花板' },
+  { tag: '重度编程', plan: 'Claude Pro / Max', reason: '代码质量领先，Cursor / Cline 必配' },
+  { tag: '国内企业合规', plan: '智谱 Pro / 百炼', reason: '发票、合同、等保一站式' },
+  { tag: '多模态创作', plan: 'Gemini Advanced', reason: '2M context + 视频理解' },
+  { tag: '快速试错', plan: '中转站按量付费', reason: '套餐绑死风险高，先看 /sites' },
+]
+
+export default function PlansPage() {
+  return (
+    <div className='max-w-6xl mx-auto px-4 py-10 space-y-10'>
+      <header className='space-y-3'>
+        <h1 className='text-3xl font-bold'>Coding Plan 对比</h1>
+        <p className='text-gray-400'>
+          官方订阅套餐横向对比 — 帮你决定是买 Plus、买 Pro、还是直接走中转站按量付费。
+        </p>
+        <p className='text-xs text-gray-500'>
+          数据更新于 2026/06，参考 awesome-coding-plan，价格以官方为准。
+        </p>
+      </header>
+
+      <section className='bg-gray-900 border border-gray-800 rounded-lg overflow-x-auto'>
+        <table className='w-full text-sm'>
+          <thead className='bg-gray-800/50 text-gray-300'>
+            <tr>
+              <th className='text-left px-4 py-3'>平台 / 套餐</th>
+              <th className='text-left px-4 py-3'>价格</th>
+              <th className='text-left px-4 py-3'>提供模型</th>
+              <th className='text-left px-4 py-3 text-green-400'>优点</th>
+              <th className='text-left px-4 py-3 text-red-400'>缺点</th>
+            </tr>
+          </thead>
+          <tbody>
+            {PLANS.map((p) => (
+              <tr key={p.platform} className='border-t border-gray-800 hover:bg-gray-900/50'>
+                <td className='px-4 py-3 font-medium text-gray-100'>{p.platform}</td>
+                <td className='px-4 py-3 text-blue-400 whitespace-nowrap'>{p.price}</td>
+                <td className='px-4 py-3 text-gray-300'>{p.models}</td>
+                <td className='px-4 py-3 text-gray-400'>{p.pros}</td>
+                <td className='px-4 py-3 text-gray-500'>{p.cons}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section className='space-y-4'>
+        <h2 className='text-2xl font-bold'>适合谁</h2>
+        <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+          {RECOMMENDATIONS.map((r) => (
+            <div
+              key={r.tag}
+              className='bg-gray-900 border border-gray-800 rounded-lg p-4 space-y-2'
+            >
+              <div className='text-xs text-blue-400 font-medium'>{r.tag}</div>
+              <div className='text-lg font-bold text-gray-100'>→ {r.plan}</div>
+              <p className='text-sm text-gray-400'>{r.reason}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className='bg-blue-900/20 border border-blue-800 rounded-lg p-5 text-sm text-blue-200'>
+        <div className='font-bold mb-2'>什么时候应该走中转站而不是官方订阅？</div>
+        <ul className='list-disc list-inside space-y-1 text-blue-100/90'>
+          <li>需要多个模型混用（Claude + GPT + Gemini）— 中转站一个 Key 跑全部</li>
+          <li>国内无法支付外币 — 中转站直接微信/支付宝</li>
+          <li>需要发票合同 — 套餐订阅通常不开票</li>
+          <li>使用量低于 $20/月 — 按量更划算</li>
+        </ul>
+      </section>
+    </div>
+  )
+}
