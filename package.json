@@ -7,24 +7,33 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:report": "playwright show-report",
     "import-hvoy": "node scripts/import-hvoy.mjs"
   },
   "dependencies": {
+    "@prisma/client": "^6.9.0",
     "next": "^15.3.3",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "@prisma/client": "^6.9.0"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "typescript": "^5.8.3",
+    "@playwright/test": "^1.61.0",
+    "@tailwindcss/postcss": "^4.1.7",
     "@types/node": "^22.15.3",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
+    "@vitest/coverage-v8": "^4.1.9",
+    "eslint": "^9.27.0",
+    "eslint-config-next": "^15.3.3",
+    "postcss": "^8.5.4",
     "prisma": "^6.9.0",
     "tailwindcss": "^4.1.7",
-    "@tailwindcss/postcss": "^4.1.7",
-    "postcss": "^8.5.4",
-    "eslint": "^9.27.0",
-    "eslint-config-next": "^15.3.3"
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.9"
   }
 }
