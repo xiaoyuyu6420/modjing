@@ -6,7 +6,6 @@ import type {
   ApiVerifierRequest,
   ApiVerifierResponse,
   DetectServiceConfig,
-  DEFAULT_CONFIG,
 } from './types'
 
 const DEFAULT_API_VERIFIER_URL = 'http://localhost:8001'
@@ -20,7 +19,7 @@ export async function callApiVerifier(
   config?: DetectServiceConfig
 ): Promise<DetectResult> {
   const baseUrl = config?.apiVerifierUrl || DEFAULT_API_VERIFIER_URL
-  const timeout = config?.timeout || 120
+  const timeout = config?.timeout ?? 120
 
   const requestBody: ApiVerifierRequest = {
     url: request.url,
@@ -53,7 +52,7 @@ export async function callApiVerifier(
       score: data.score,
       level: data.level as DetectResult['level'],
       verdict: data.verdict as DetectResult['verdict'],
-      details: data.notes.join('\n'),
+      details: (data.notes ?? []).join('\n'),
       source: 'api-verifier',
       breakdown: {
         knowledge_score: data.breakdown.knowledge_score,
@@ -62,7 +61,7 @@ export async function callApiVerifier(
         usage_score: data.breakdown.usage_score,
         penalty_score: data.breakdown.penalty_score,
       },
-      notes: data.notes,
+      notes: data.notes ?? [],
       timings: {
         first_char_latency_seconds: data.timings.first_char_latency_seconds ?? undefined,
         request_duration_seconds: data.timings.request_duration_seconds ?? undefined,
