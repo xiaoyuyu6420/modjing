@@ -20,8 +20,9 @@ export async function detectFraud(
 ): Promise<DetectResult> {
   const mergedConfig = { ...DEFAULT_CONFIG, ...config }
 
-  // 判断是否为 Claude 模型
-  const isClaude = request.model.toLowerCase().includes('claude')
+  // 判断是否为 Claude 模型（防御类型错误）
+  const isClaude = typeof request.model === 'string' &&
+    request.model.toLowerCase().includes('claude')
 
   // 快速检测模式 + Claude 模型 → 使用 APIVerifier
   if (request.quick && isClaude) {

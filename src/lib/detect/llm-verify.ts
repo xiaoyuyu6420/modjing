@@ -19,7 +19,7 @@ export async function callLlmVerify(
   config?: DetectServiceConfig
 ): Promise<DetectResult> {
   const baseUrl = config?.llmVerifyUrl || DEFAULT_LLM_VERIFY_URL
-  const timeout = config?.timeout || 180 // 深度检测需要更长时间
+  const timeout = config?.timeout ?? 180 // 深度检测需要更长时间
 
   const requestBody: LlmVerifyRequest = {
     name: `检测 ${request.model}`,
@@ -51,14 +51,15 @@ export async function callLlmVerify(
 
     const data: LlmVerifyResponse = await response.json()
 
-    // 将 red_flags 转换为 notes
-    const notes = data.red_flags.map(
+    // 将 red_flags 转换为 notes（防御空值）
+    const flags = data.red_flags ?? []
+    const notes = flags.map(
       (flag) => `[${flag.severity}] ${flag.category}: ${flag.description} - ${flag.evidence}`
     )
 
     // 计算分数（基于 red_flags）
-    const highFlags = data.red_flags.filter((f) => f.severity === 'HIGH').length
-    const mediumFlags = data.red_flags.filter((f) => f.severity === 'MEDIUM').length
+    const highFlags = flags.filter((f) => f.severity === 'HIGH').length
+    const mediumFlags = flags.filter((f) => f.severity === 'MEDIUM').length
     const score = Math.max(0, 100 - highFlags * 30 - mediumFlags * 10)
 
     // 确定等级
