@@ -1,1 +1,107 @@
-@import 'tailwindcss'
+@import 'tailwindcss';
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes count-up {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
+
+.animate-fade-up-delay-1 {
+  animation: fade-up 0.6s ease-out 0.1s both;
+}
+
+.animate-fade-up-delay-2 {
+  animation: fade-up 0.6s ease-out 0.2s both;
+}
+
+.animate-fade-up-delay-3 {
+  animation: fade-up 0.6s ease-out 0.3s both;
+}
+
+.animate-glow {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+.animate-count {
+  animation: count-up 0.5s ease-out both;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+}
+
+.glass-card:hover {
+  border-color: rgba(96, 165, 250, 0.4);
+  background: rgba(17, 24, 39, 0.8);
+}
+
+/* Gradient border effect */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.5), rgba(167, 139, 250, 0.5), rgba(244, 114, 182, 0.3));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+/* Glow dot */
+.glow-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px 2px currentColor;
+}
