@@ -1,107 +1,148 @@
 @import 'tailwindcss';
 
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
+/*
+ * 模镜 Miro — 设计系统
+ * 浅色优先 · 暖中性画布 (stone) · 沉稳 emerald · 等宽数字（镜=精密仪器）
+ */
+
+@theme {
+  /* Brand — calmer, deeper emerald than typical SaaS green */
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-200: #a7f3d0;
+  --color-brand-300: #6ee7b7;
+  --color-brand-400: #34d399;
+  --color-brand-500: #10b981;
+  --color-brand-600: #059669;
+  --color-brand-700: #047857;
+  --color-brand-800: #065f46;
+  --color-brand-900: #064e3b;
+  --color-brand-950: #022c22;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Menlo', 'Consolas',
+    monospace;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  body {
+    background-color: #fafaf9; /* stone-50 warm canvas */
+    color: #1c1917; /* stone-900 */
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  ::selection {
+    background: #a7f3d0;
+    color: #022c22;
+  }
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #fafaf9, 0 0 0 4px rgba(5, 150, 105, 0.45);
+  }
+  /* refined, unobtrusive scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #d6d3d1 transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #e7e5e4;
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: #d6d3d1;
+    background-clip: content-box;
   }
 }
 
-@keyframes glow-pulse {
-  0%, 100% {
-    opacity: 0.4;
+@layer components {
+  /* surfaces */
+  .mj-card {
+    @apply bg-white border border-stone-200/80 rounded-xl;
   }
-  50% {
-    opacity: 0.8;
+  .mj-card-hover {
+    @apply transition-colors hover:border-stone-300;
   }
-}
 
-@keyframes count-up {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
+  /* text */
+  .mj-muted {
+    @apply text-stone-500;
   }
-  to {
-    opacity: 1;
-    transform: scale(1);
+  .mj-faint {
+    @apply text-stone-400;
   }
-}
+  .mj-mono {
+    @apply font-mono tabular-nums tracking-tight;
+  }
 
-.animate-fade-up {
-  animation: fade-up 0.6s ease-out both;
-}
+  /* form controls */
+  .mj-input {
+    @apply w-full bg-white border border-stone-300 rounded-lg px-3 py-2 text-sm
+      text-stone-900 placeholder:text-stone-400 focus:border-brand-500;
+  }
+  .mj-select {
+    @apply bg-white border border-stone-300 rounded-lg px-3 py-2 text-sm text-stone-900
+      focus:border-brand-500;
+  }
+  .mj-label {
+    @apply block text-xs font-medium text-stone-600 mb-1.5;
+  }
+  .mj-field-hint {
+    @apply mt-1 text-xs text-stone-400;
+  }
 
-.animate-fade-up-delay-1 {
-  animation: fade-up 0.6s ease-out 0.1s both;
-}
+  /* buttons */
+  .mj-btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2
+      text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .mj-btn-primary {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2
+      text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed
+      bg-brand-600 text-white hover:bg-brand-700;
+  }
+  .mj-btn-ghost {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2
+      text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed
+      bg-white border border-stone-300 text-stone-700 hover:bg-stone-50;
+  }
+  .mj-btn-danger {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2
+      text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed
+      bg-white border border-red-200 text-red-600 hover:bg-red-50;
+  }
+  .mj-btn-link {
+    @apply text-sm text-brand-600 hover:text-brand-700;
+  }
 
-.animate-fade-up-delay-2 {
-  animation: fade-up 0.6s ease-out 0.2s both;
-}
+  /* badges */
+  .mj-badge {
+    @apply inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-medium leading-none;
+  }
 
-.animate-fade-up-delay-3 {
-  animation: fade-up 0.6s ease-out 0.3s both;
-}
-
-.animate-glow {
-  animation: glow-pulse 4s ease-in-out infinite;
-}
-
-.animate-count {
-  animation: count-up 0.5s ease-out both;
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Glass card */
-.glass-card {
-  background: rgba(17, 24, 39, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(75, 85, 99, 0.3);
-}
-
-.glass-card:hover {
-  border-color: rgba(96, 165, 250, 0.4);
-  background: rgba(17, 24, 39, 0.8);
-}
-
-/* Gradient border effect */
-.gradient-border {
-  position: relative;
-}
-
-.gradient-border::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.5), rgba(167, 139, 250, 0.5), rgba(244, 114, 182, 0.3));
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.gradient-border:hover::before {
-  opacity: 1;
-}
-
-/* Glow dot */
-.glow-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  box-shadow: 0 0 8px 2px currentColor;
+  /* tables — hairline, editorial */
+  .mj-table-wrap {
+    @apply overflow-x-auto rounded-xl border border-stone-200/80 bg-white;
+  }
+  .mj-table {
+    @apply w-full text-sm;
+  }
+  .mj-th {
+    @apply bg-stone-50/80 text-left text-xs font-semibold uppercase tracking-wide text-stone-500 px-4 py-2.5 border-b border-stone-200;
+  }
+  .mj-td {
+    @apply px-4 py-3 border-b border-stone-100 align-middle;
+  }
+  .mj-row {
+    @apply transition-colors hover:bg-stone-50/70;
+  }
 }
