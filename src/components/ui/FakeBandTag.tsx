@@ -1,11 +1,10 @@
-// owner: agent-B
 type Props = { band: string | null | undefined }
 
 const STYLES: Record<string, string> = {
-  minimal: 'bg-green-900/50 text-green-400 border-green-800/50',
-  low: 'bg-blue-900/50 text-blue-400 border-blue-800/50',
-  light: 'bg-yellow-900/50 text-yellow-400 border-yellow-800/50',
-  severe: 'bg-red-900/50 text-red-400 border-red-800/50',
+  minimal: 'bg-brand-50 text-brand-700 border-brand-200',
+  low: 'bg-sky-50 text-sky-700 border-sky-200',
+  light: 'bg-amber-50 text-amber-700 border-amber-200',
+  severe: 'bg-red-50 text-red-700 border-red-200',
 }
 
 const LABELS: Record<string, string> = {
@@ -18,16 +17,10 @@ const LABELS: Record<string, string> = {
 export function FakeBandTag({ band }: Props) {
   if (!band) {
     return (
-      <span className='inline-block px-2 py-0.5 rounded text-xs border border-gray-800 bg-gray-900/50 text-gray-500'>
-        未探测
-      </span>
+      <span className='mj-badge bg-stone-50 text-stone-400 border-stone-200'>未探测</span>
     )
   }
-  const style = STYLES[band] ?? 'bg-gray-900/50 text-gray-400 border-gray-800'
+  const style = STYLES[band] ?? 'bg-stone-50 text-stone-500 border-stone-200'
   const label = LABELS[band] ?? band
-  return (
-    <span className={`inline-block px-2 py-0.5 rounded text-xs border ${style}`}>
-      {label}
-    </span>
-  )
+  return <span className={`mj-badge ${style}`}>{label}</span>
 }
