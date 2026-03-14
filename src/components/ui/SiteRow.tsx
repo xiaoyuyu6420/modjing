@@ -1,4 +1,3 @@
-// owner: agent-C
 import Link from 'next/link'
 
 type Props = {
@@ -11,11 +10,18 @@ type Props = {
 export default function SiteRow({ siteId, siteName, channel, url }: Props) {
   return (
     <div className='flex items-center gap-2'>
-      <Link href={`/sites/${siteId}`} className='font-medium text-gray-100 hover:text-blue-400 transition-colors'>
+      <Link
+        href={`/sites/${siteId}`}
+        className='font-medium text-stone-900 hover:text-brand-700 transition-colors'
+      >
         {siteName}
       </Link>
-      {channel ? <span className='text-xs text-gray-500'>· {channel}</span> : null}
-      {url ? <span className='text-xs text-gray-600 hidden md:inline'>{url.replace(/^https?:\/\//, '')}</span> : null}
+      {channel ? <span className='text-xs text-stone-400'>· {channel}</span> : null}
+      {url ? (
+        <span className='text-xs text-stone-400 hidden md:inline'>
+          {url.replace(/^https?:\/\//, '')}
+        </span>
+      ) : null}
     </div>
   )
 }
