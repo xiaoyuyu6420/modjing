@@ -63,10 +63,10 @@ export default async function ModelDetailPage({ params }: { params: Promise<{ mo
   if (channels.length === 0) {
     return (
       <main className='min-h-screen p-6 max-w-7xl mx-auto'>
-        <Link href='/models' className='text-sm text-gray-400 hover:text-gray-200'>← 所有模型</Link>
+        <Link href='/models' className='text-sm text-stone-500 hover:text-brand-700'>← 所有模型</Link>
         <div className='mt-12 text-center'>
-          <h1 className='text-2xl font-bold'>{base}</h1>
-          <p className='mt-4 text-gray-500'>暂无站点收录此模型</p>
+          <h1 className='text-2xl font-bold text-stone-900'>{base}</h1>
+          <p className='mt-4 text-stone-400'>暂无站点收录此模型</p>
         </div>
       </main>
     )
@@ -75,15 +75,17 @@ export default async function ModelDetailPage({ params }: { params: Promise<{ mo
   return (
     <main className='min-h-screen p-6 max-w-7xl mx-auto'>
       <div className='mb-6'>
-        <Link href='/models' className='text-sm text-gray-400 hover:text-gray-200'>← 所有模型</Link>
+        <Link href='/models' className='text-sm text-stone-500 hover:text-brand-700'>← 所有模型</Link>
       </div>
 
       <div className='mb-6'>
         <div className='flex items-center gap-3 flex-wrap'>
-          <h1 className='text-3xl font-bold'>{base}</h1>
-          <span className='px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-300'>{provider}</span>
+          <h1 className='text-3xl font-bold tracking-tight text-stone-900'>{base}</h1>
+          <span className='mj-badge border-stone-200 bg-stone-100 text-stone-600'>{provider}</span>
         </div>
-        <p className='text-gray-400 mt-2 text-sm'>对比 {channels.length} 个渠道，找最便宜、最稳的中转站。所有数据来自模镜公开探针。</p>
+        <p className='text-stone-500 mt-2 text-sm'>
+          对比 {channels.length} 个渠道，找最便宜、最稳的中转站。所有数据来自模镜公开探针。
+        </p>
       </div>
 
       <div className='grid grid-cols-2 md:grid-cols-4 gap-3 mb-6'>
@@ -100,10 +102,10 @@ export default async function ModelDetailPage({ params }: { params: Promise<{ mo
 
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <div className='rounded-lg border border-gray-800 bg-gray-900/50 p-4'>
-      <div className='text-xs text-gray-500'>{label}</div>
-      <div className='mt-1 text-xl font-semibold text-gray-100 tabular-nums'>{value}</div>
-      {hint ? <div className='text-[10px] text-gray-600 mt-0.5'>{hint}</div> : null}
+    <div className='mj-card p-4'>
+      <div className='text-xs text-stone-500'>{label}</div>
+      <div className='mt-1 text-xl font-semibold text-stone-900 mj-mono'>{value}</div>
+      {hint ? <div className='text-[10px] text-stone-400 mt-0.5'>{hint}</div> : null}
     </div>
   )
 }

@@ -16,15 +16,15 @@ function providerOf(base: string): string {
 }
 
 const providerStyle: Record<string, string> = {
-  Anthropic: 'bg-orange-900/40 text-orange-300',
-  OpenAI: 'bg-emerald-900/40 text-emerald-300',
-  Google: 'bg-blue-900/40 text-blue-300',
-  DeepSeek: 'bg-indigo-900/40 text-indigo-300',
-  Moonshot: 'bg-purple-900/40 text-purple-300',
-  Alibaba: 'bg-cyan-900/40 text-cyan-300',
-  MiniMax: 'bg-pink-900/40 text-pink-300',
-  Zhipu: 'bg-yellow-900/40 text-yellow-300',
-  Other: 'bg-gray-800 text-gray-400',
+  Anthropic: 'border-orange-200 bg-orange-50 text-orange-700',
+  OpenAI: 'border-brand-200 bg-brand-50 text-brand-700',
+  Google: 'border-sky-200 bg-sky-50 text-sky-700',
+  DeepSeek: 'border-indigo-200 bg-indigo-50 text-indigo-700',
+  Moonshot: 'border-violet-200 bg-violet-50 text-violet-700',
+  Alibaba: 'border-cyan-200 bg-cyan-50 text-cyan-700',
+  MiniMax: 'border-pink-200 bg-pink-50 text-pink-700',
+  Zhipu: 'border-amber-200 bg-amber-50 text-amber-700',
+  Other: 'border-stone-200 bg-stone-50 text-stone-600',
 }
 
 export default async function ModelsPage() {
@@ -86,49 +86,52 @@ export default async function ModelsPage() {
     <main className='min-h-screen p-6 max-w-7xl mx-auto'>
       <div className='mb-8 flex items-center justify-between'>
         <div>
-          <h1 className='text-3xl font-bold'>所有模型</h1>
-          <p className='text-gray-400 mt-1'>共 {models.length} 个基础模型，覆盖 8 家厂商</p>
+          <h1 className='text-3xl font-bold tracking-tight'>所有模型</h1>
+          <p className='text-stone-500 mt-1.5'>共 {models.length} 个基础模型，覆盖 8 家厂商</p>
         </div>
-        <Link href='/' className='text-sm text-gray-400 hover:text-gray-200 transition-colors'>← 返回首页</Link>
+        <Link href='/' className='text-sm text-stone-500 hover:text-brand-700'>← 返回首页</Link>
       </div>
 
-      <div className='overflow-x-auto rounded-lg border border-gray-800'>
-        <table className='w-full text-sm'>
+      <div className='mj-table-wrap'>
+        <table className='mj-table'>
           <thead>
-            <tr className='border-b border-gray-800 text-left text-gray-400 bg-gray-900/50'>
-              <th className='py-3 px-4 font-medium'>模型</th>
-              <th className='py-3 px-4 font-medium'>厂商</th>
-              <th className='py-3 px-4 font-medium text-right'>站点</th>
-              <th className='py-3 px-4 font-medium text-right'>渠道</th>
-              <th className='py-3 px-4 font-medium text-right'>最低价</th>
-              <th className='py-3 px-4 font-medium text-right'>平均价</th>
-              <th className='py-3 px-4 font-medium text-right'>通过率</th>
-              <th className='py-3 px-4 font-medium text-right'>延迟</th>
+            <tr>
+              <th className='mj-th'>模型</th>
+              <th className='mj-th'>厂商</th>
+              <th className='mj-th text-right'>站点</th>
+              <th className='mj-th text-right'>渠道</th>
+              <th className='mj-th text-right'>最低价</th>
+              <th className='mj-th text-right'>平均价</th>
+              <th className='mj-th text-right'>通过率</th>
+              <th className='mj-th text-right'>延迟</th>
             </tr>
           </thead>
           <tbody>
             {models.map((m) => (
-              <tr key={m.base} className='border-b border-gray-800/50 hover:bg-gray-900/50 transition-colors'>
-                <td className='py-3 px-4'>
-                  <Link href={`/models/${encodeURIComponent(m.base)}`} className='font-medium text-gray-100 hover:text-blue-400'>
+              <tr key={m.base} className='mj-row'>
+                <td className='mj-td'>
+                  <Link
+                    href={`/models/${encodeURIComponent(m.base)}`}
+                    className='font-medium text-stone-900 hover:text-brand-700'
+                  >
                     {m.base}
                   </Link>
                 </td>
-                <td className='py-3 px-4'>
-                  <span className={`inline-block px-2 py-0.5 rounded text-xs ${providerStyle[m.provider]}`}>{m.provider}</span>
+                <td className='mj-td'>
+                  <span className={`mj-badge ${providerStyle[m.provider]}`}>{m.provider}</span>
                 </td>
-                <td className='py-3 px-4 text-right tabular-nums text-gray-300'>{m.siteCount}</td>
-                <td className='py-3 px-4 text-right tabular-nums text-gray-300'>{m.channelCount}</td>
-                <td className='py-3 px-4 text-right tabular-nums text-gray-100'>
+                <td className='mj-td text-right mj-mono text-stone-700'>{m.siteCount}</td>
+                <td className='mj-td text-right mj-mono text-stone-700'>{m.channelCount}</td>
+                <td className='mj-td text-right mj-mono text-stone-900'>
                   {m.minPrice == null ? '-' : `¥${m.minPrice.toFixed(m.minPrice < 1 ? 4 : 2)}`}
                 </td>
-                <td className='py-3 px-4 text-right tabular-nums text-gray-400'>
+                <td className='mj-td text-right mj-mono text-stone-400'>
                   {m.avgPrice == null ? '-' : `¥${m.avgPrice.toFixed(m.avgPrice < 1 ? 4 : 2)}`}
                 </td>
-                <td className='py-3 px-4 text-right tabular-nums text-gray-400'>
+                <td className='mj-td text-right mj-mono text-stone-400'>
                   {m.avgPass == null ? '-' : `${m.avgPass.toFixed(1)}%`}
                 </td>
-                <td className='py-3 px-4 text-right tabular-nums text-gray-400'>
+                <td className='mj-td text-right mj-mono text-stone-400'>
                   {m.avgLat == null ? '-' : `${Math.round(m.avgLat)}ms`}
                 </td>
               </tr>

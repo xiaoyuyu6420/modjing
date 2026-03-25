@@ -47,10 +47,10 @@ export default async function LeaderboardPage() {
     <main className='min-h-screen p-6 max-w-7xl mx-auto'>
       <div className='mb-8 flex items-center justify-between'>
         <div>
-          <h1 className='text-3xl font-bold'>综合排行榜</h1>
-          <p className='text-gray-400 mt-1 text-sm'>按模镜综合评分排序，覆盖热门 7 个基础模型。</p>
+          <h1 className='text-3xl font-bold tracking-tight'>综合排行榜</h1>
+          <p className='text-stone-500 mt-1.5 text-sm'>按模镜综合评分排序，覆盖热门 7 个基础模型。</p>
         </div>
-        <Link href='/' className='text-sm text-gray-400 hover:text-gray-200'>← 返回首页</Link>
+        <Link href='/' className='text-sm text-stone-500 hover:text-brand-700'>← 返回首页</Link>
       </div>
       <LeaderboardTabs tabs={TABS} data={byModel} />
     </main>
