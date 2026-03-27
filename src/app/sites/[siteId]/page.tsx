@@ -101,10 +101,7 @@ export default async function SiteDetailPage({
   return (
     <main className='min-h-screen p-6 max-w-7xl mx-auto'>
       <div className='mb-6'>
-        <Link
-          href='/sites'
-          className='text-sm text-gray-400 hover:text-gray-200'
-        >
+        <Link href='/sites' className='text-sm text-stone-500 hover:text-brand-700'>
           ← 返回站点列表
         </Link>
       </div>
@@ -115,54 +112,52 @@ export default async function SiteDetailPage({
           <img
             src={site.logo}
             alt={site.name}
-            className='w-16 h-16 rounded-lg border border-gray-800 bg-gray-900 object-contain'
+            className='w-16 h-16 rounded-xl border border-stone-200 bg-white object-contain'
           />
         ) : (
-          <div className='w-16 h-16 rounded-lg border border-gray-800 bg-gray-900 flex items-center justify-center text-2xl text-gray-500'>
+          <div className='w-16 h-16 rounded-xl border border-stone-200 bg-white flex items-center justify-center text-2xl font-bold text-stone-400'>
             {site.name.slice(0, 1)}
           </div>
         )}
         <div className='flex-1 min-w-0'>
           <div className='flex items-center gap-3 flex-wrap'>
-            <h1 className='text-3xl font-bold text-gray-100'>{site.name}</h1>
+            <h1 className='text-3xl font-bold tracking-tight text-stone-900'>{site.name}</h1>
             <StatusBadge status={site.status} />
             {site.isFree && (
-              <span className='inline-block px-2 py-0.5 rounded text-xs border border-blue-800/50 text-blue-300 bg-blue-900/30'>
-                公益站
-              </span>
+              <span className='mj-badge border-brand-200 bg-brand-50 text-brand-700'>公益站</span>
             )}
           </div>
           <a
             href={site.url}
             target='_blank'
             rel='noreferrer'
-            className='text-sm text-gray-400 hover:text-blue-400 inline-flex items-center gap-1 mt-1'
+            className='text-sm text-stone-500 hover:text-brand-700 inline-flex items-center gap-1 mt-1.5'
           >
             {site.url} ↗
           </a>
         </div>
         <div className='text-right'>
-          <div className='text-xs text-gray-500'>综合评分</div>
-          <div className='text-4xl font-bold text-blue-400 font-mono'>
+          <div className='text-xs text-stone-500'>综合评分</div>
+          <div className='text-4xl font-bold text-brand-600 mj-mono'>
             {avgScore == null ? '-' : avgScore.toFixed(1)}
           </div>
         </div>
       </header>
 
       {site.announcement && (
-        <div className='mb-6 border border-yellow-900/50 bg-yellow-950/30 text-yellow-200 rounded-lg px-4 py-3 text-sm'>
+        <div className='mb-6 border border-amber-200 bg-amber-50 text-amber-800 rounded-xl px-4 py-3 text-sm'>
           <span className='font-medium mr-2'>公告</span>
           {site.announcement}
         </div>
       )}
 
       <div className='grid md:grid-cols-3 gap-6 mb-8'>
-        <section className='md:col-span-2 border border-gray-800 rounded-lg p-5 bg-gray-900/30'>
-          <h2 className='text-lg font-semibold mb-2'>站点介绍</h2>
-          <p className='text-gray-300 text-sm whitespace-pre-line leading-relaxed'>
+        <section className='md:col-span-2 mj-card p-5'>
+          <h2 className='text-lg font-semibold text-stone-900 mb-2'>站点介绍</h2>
+          <p className='text-stone-600 text-sm whitespace-pre-line leading-relaxed'>
             {site.description?.trim() || '该站点尚未提供介绍。'}
           </p>
-          <div className='mt-4 text-xs text-gray-500'>
+          <div className='mt-4 text-xs text-stone-400'>
             收录时间：{new Date(site.createdAt).toLocaleDateString('zh-CN')}
             {site.paymentMethods && (
               <span className='ml-4'>支付方式：{site.paymentMethods}</span>
@@ -170,9 +165,9 @@ export default async function SiteDetailPage({
           </div>
         </section>
 
-        <aside className='border border-gray-800 rounded-lg p-5 bg-gray-900/30'>
-          <h2 className='text-lg font-semibold mb-3'>企业合规</h2>
-          <dl className='text-sm space-y-2'>
+        <aside className='mj-card p-5'>
+          <h2 className='text-lg font-semibold text-stone-900 mb-3'>企业合规</h2>
+          <dl className='text-sm space-y-2.5'>
             <Row label='发票' value={site.hasInvoice ? site.invoiceTypes || '支持' : '不支持'} />
             <Row label='合规等级' value={COMPLIANCE_LABELS[compliance] ?? compliance} />
             <Row
@@ -183,10 +178,7 @@ export default async function SiteDetailPage({
               label='承诺 SLA'
               value={site.slaUptime ? `${site.slaUptime.toFixed(2)}%` : '-'}
             />
-            <Row
-              label='企业账户'
-              value={site.hasEnterpriseAccount ? '支持' : '-'}
-            />
+            <Row label='企业账户' value={site.hasEnterpriseAccount ? '支持' : '-'} />
             <Row label='子账号' value={site.hasSubAccounts ? '支持' : '-'} />
             <Row label='7x24 支持' value={site.has24x7Support ? '是' : '-'} />
           </dl>
@@ -194,44 +186,39 @@ export default async function SiteDetailPage({
       </div>
 
       <section className='mb-8'>
-        <h2 className='text-xl font-semibold mb-3'>模型 / 渠道价格</h2>
+        <h2 className='text-xl font-semibold text-stone-900 mb-3'>模型 / 渠道价格</h2>
         <ModelPriceTable groups={groups} />
       </section>
 
       <section className='mb-8'>
-        <h2 className='text-xl font-semibold mb-3'>价格历史</h2>
+        <h2 className='text-xl font-semibold text-stone-900 mb-3'>价格历史</h2>
         <PriceHistoryList items={history} />
       </section>
 
       <section className='mb-8'>
-        <h2 className='text-xl font-semibold mb-3'>
+        <h2 className='text-xl font-semibold text-stone-900 mb-3'>
           用户评价{' '}
-          <span className='text-sm text-gray-500 font-normal'>
+          <span className='text-sm text-stone-400 font-normal'>
             （{site.reviews.length}）
           </span>
         </h2>
         {site.reviews.length === 0 ? (
-          <div className='border border-gray-800 rounded-lg p-6 text-center text-gray-500 text-sm'>
+          <div className='mj-card p-6 text-center text-stone-400 text-sm'>
             还没有用户评价。
           </div>
         ) : (
           <div className='space-y-3'>
             {site.reviews.map((r) => (
-              <div
-                key={r.id}
-                className='border border-gray-800 rounded-lg p-4 bg-gray-900/30'
-              >
+              <div key={r.id} className='mj-card p-4'>
                 <div className='flex items-center justify-between mb-2'>
-                  <span className='text-gray-200 font-medium'>{r.author}</span>
-                  <span className='text-yellow-400 text-sm'>
+                  <span className='text-stone-900 font-medium'>{r.author}</span>
+                  <span className='text-amber-500 text-sm'>
                     {'★'.repeat(r.rating)}
-                    <span className='text-gray-700'>
-                      {'★'.repeat(5 - r.rating)}
-                    </span>
+                    <span className='text-stone-300'>{'★'.repeat(5 - r.rating)}</span>
                   </span>
                 </div>
-                <p className='text-sm text-gray-300'>{r.content}</p>
-                <div className='text-xs text-gray-500 mt-2'>
+                <p className='text-sm text-stone-600 leading-relaxed'>{r.content}</p>
+                <div className='text-xs text-stone-400 mt-2'>
                   {new Date(r.createdAt).toLocaleString('zh-CN')}
                 </div>
               </div>
@@ -240,14 +227,9 @@ export default async function SiteDetailPage({
         )}
       </section>
 
-      <footer className='border-t border-gray-800 pt-4 text-xs text-gray-500'>
+      <footer className='border-t border-stone-200 pt-4 text-xs text-stone-400'>
         部分数据来自{' '}
-        <a
-          href='https://hvoy.ai'
-          target='_blank'
-          rel='noreferrer'
-          className='text-gray-400 hover:text-blue-400'
-        >
+        <a href='https://hvoy.ai' target='_blank' rel='noreferrer' className='text-stone-500 hover:text-brand-700'>
           hvoy.ai
         </a>{' '}
         公开探针。
@@ -259,8 +241,8 @@ export default async function SiteDetailPage({
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className='flex justify-between gap-3'>
-      <dt className='text-gray-500'>{label}</dt>
-      <dd className='text-gray-200 text-right'>{value}</dd>
+      <dt className='text-stone-500'>{label}</dt>
+      <dd className='text-stone-800 text-right'>{value}</dd>
     </div>
   )
 }

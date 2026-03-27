@@ -81,12 +81,12 @@ export function SitesTable({ rows }: { rows: SiteRow[] }) {
             setPage(1)
           }}
           placeholder='搜索站点名 / 域名'
-          className='flex-1 min-w-[220px] bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-600'
+          className='mj-input flex-1 min-w-[220px]'
         />
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value as SortKey)}
-          className='bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-600'
+          className='mj-select'
         >
           <option value='score-desc'>综合评分 高→低</option>
           <option value='score-asc'>综合评分 低→高</option>
@@ -94,7 +94,7 @@ export function SitesTable({ rows }: { rows: SiteRow[] }) {
           <option value='price-asc'>价格 低→高</option>
           <option value='created-desc'>收录时间 新→旧</option>
         </select>
-        <label className='text-sm text-gray-400 flex items-center gap-2 cursor-pointer'>
+        <label className='text-sm text-stone-600 flex items-center gap-2 cursor-pointer'>
           <input
             type='checkbox'
             checked={freeOnly}
@@ -102,43 +102,41 @@ export function SitesTable({ rows }: { rows: SiteRow[] }) {
               setFreeOnly(e.target.checked)
               setPage(1)
             }}
+            className='accent-brand-600'
           />
           仅看公益站
         </label>
-        <span className='text-xs text-gray-500'>共 {filtered.length} 条</span>
+        <span className='text-xs text-stone-400'>共 {filtered.length} 条</span>
       </div>
 
-      <div className='overflow-x-auto border border-gray-800 rounded-lg'>
-        <table className='w-full text-sm'>
-          <thead className='bg-gray-900/60'>
-            <tr className='text-left text-gray-400'>
-              <th className='py-3 px-4 font-medium'>站点</th>
-              <th className='py-3 px-4 font-medium'>状态</th>
-              <th className='py-3 px-4 font-medium'>综合评分</th>
-              <th className='py-3 px-4 font-medium'>模型数</th>
-              <th className='py-3 px-4 font-medium'>价格异常</th>
-              <th className='py-3 px-4 font-medium'>企业合规</th>
-              <th className='py-3 px-4 font-medium'>类型</th>
-              <th className='py-3 px-4 font-medium'>收录</th>
+      <div className='mj-table-wrap'>
+        <table className='mj-table'>
+          <thead>
+            <tr>
+              <th className='mj-th'>站点</th>
+              <th className='mj-th'>状态</th>
+              <th className='mj-th'>综合评分</th>
+              <th className='mj-th'>模型数</th>
+              <th className='mj-th'>价格异常</th>
+              <th className='mj-th'>企业合规</th>
+              <th className='mj-th'>类型</th>
+              <th className='mj-th'>收录</th>
             </tr>
           </thead>
           <tbody>
             {slice.length === 0 ? (
               <tr>
-                <td colSpan={8} className='py-12 text-center text-gray-500'>
+                <td colSpan={8} className='py-12 text-center text-stone-400'>
                   没有匹配的站点
                 </td>
               </tr>
             ) : (
               slice.map((r) => (
-                <tr
-                  key={r.id}
-                  className='border-t border-gray-800/60 hover:bg-gray-900/50 transition-colors'
-                >
-                  <td className='py-3 px-4'>
+                <tr key={r.id} className='mj-row'>
+                  <td className='mj-td'>
                     <Link
                       href={`/sites/${r.id}`}
-                      className='font-medium text-gray-100 hover:text-blue-400'
+                      className='font-medium text-stone-900 hover:text-brand-700'
                     >
                       {r.name}
                     </Link>
@@ -146,56 +144,54 @@ export function SitesTable({ rows }: { rows: SiteRow[] }) {
                       href={r.url}
                       target='_blank'
                       rel='noreferrer'
-                      className='ml-2 text-xs text-gray-500 hover:text-gray-300'
+                      className='ml-2 text-xs text-stone-400 hover:text-stone-600'
                     >
                       {stripUrl(r.url)} ↗
                     </a>
                   </td>
-                  <td className='py-3 px-4'>
+                  <td className='mj-td'>
                     <StatusBadge status={r.status} />
                   </td>
-                  <td className='py-3 px-4'>
+                  <td className='mj-td'>
                     {r.avgScore == null ? (
-                      <span className='text-gray-600'>-</span>
+                      <span className='text-stone-300'>-</span>
                     ) : (
-                      <span className='font-mono text-blue-400'>
+                      <span className='mj-mono text-brand-600'>
                         {r.avgScore.toFixed(1)}
                       </span>
                     )}
                   </td>
-                  <td className='py-3 px-4 text-gray-300'>{r.modelCount}</td>
-                  <td className='py-3 px-4'>
+                  <td className='mj-td mj-mono text-stone-700'>{r.modelCount}</td>
+                  <td className='mj-td'>
                     {r.anomalyCount > 0 ? (
-                      <span className='text-red-400 text-xs'>{r.anomalyCount}</span>
+                      <span className='text-red-600 text-xs font-medium'>{r.anomalyCount}</span>
                     ) : (
-                      <span className='text-gray-600 text-xs'>-</span>
+                      <span className='text-stone-300 text-xs'>-</span>
                     )}
                   </td>
-                  <td className='py-3 px-4'>
+                  <td className='mj-td'>
                     <div className='flex flex-wrap gap-1'>
                       {r.hasInvoice && (
-                        <span className='inline-block px-1.5 py-0.5 rounded text-[10px] border border-blue-800/50 text-blue-300 bg-blue-900/30'>
-                          票
-                        </span>
+                        <span className='mj-badge border-sky-200 bg-sky-50 text-sky-700'>票</span>
                       )}
                       {r.complianceLevel && r.complianceLevel !== 'none' && (
-                        <span className='inline-block px-1.5 py-0.5 rounded text-[10px] border border-purple-800/50 text-purple-300 bg-purple-900/30'>
+                        <span className='mj-badge border-violet-200 bg-violet-50 text-violet-700'>
                           {COMPLIANCE_LABELS[r.complianceLevel] ?? r.complianceLevel}
                         </span>
                       )}
                       {!r.hasInvoice && (!r.complianceLevel || r.complianceLevel === 'none') && (
-                        <span className='text-gray-600 text-xs'>-</span>
+                        <span className='text-stone-300 text-xs'>-</span>
                       )}
                     </div>
                   </td>
-                  <td className='py-3 px-4'>
+                  <td className='mj-td'>
                     {r.isFree ? (
-                      <span className='text-green-400 text-xs'>公益</span>
+                      <span className='text-brand-600 text-xs font-medium'>公益</span>
                     ) : (
-                      <span className='text-gray-500 text-xs'>商用</span>
+                      <span className='text-stone-400 text-xs'>商用</span>
                     )}
                   </td>
-                  <td className='py-3 px-4 text-gray-500 text-xs'>
+                  <td className='mj-td text-stone-400 text-xs'>
                     {new Date(r.createdAt).toLocaleDateString('zh-CN')}
                   </td>
                 </tr>
@@ -210,17 +206,17 @@ export function SitesTable({ rows }: { rows: SiteRow[] }) {
           <button
             onClick={() => setPage(Math.max(1, safePage - 1))}
             disabled={safePage === 1}
-            className='px-3 py-1 border border-gray-800 rounded hover:bg-gray-900 disabled:opacity-40'
+            className='px-3 py-1.5 border border-stone-300 rounded-lg bg-white text-stone-600 hover:bg-stone-50 disabled:opacity-40'
           >
             上一页
           </button>
-          <span className='text-gray-400'>
+          <span className='text-stone-500 mj-mono'>
             {safePage} / {pageCount}
           </span>
           <button
             onClick={() => setPage(Math.min(pageCount, safePage + 1))}
             disabled={safePage === pageCount}
-            className='px-3 py-1 border border-gray-800 rounded hover:bg-gray-900 disabled:opacity-40'
+            className='px-3 py-1.5 border border-stone-300 rounded-lg bg-white text-stone-600 hover:bg-stone-50 disabled:opacity-40'
           >
             下一页
           </button>
