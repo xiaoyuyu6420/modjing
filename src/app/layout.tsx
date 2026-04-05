@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Nav from '@/components/Nav'
-import Footer from '@/components/Footer'
+import Chrome from '@/components/Chrome'
 
 export const metadata: Metadata = {
   title: {
@@ -19,9 +18,7 @@ export default function RootLayout({
   return (
     <html lang='zh-CN'>
       <body className='min-h-screen flex flex-col antialiased bg-stone-50 text-stone-900 font-sans'>
-        <Nav />
-        <main className='flex-1'>{children}</main>
-        <Footer />
+        <Chrome>{children}</Chrome>
       </body>
     </html>
   )
