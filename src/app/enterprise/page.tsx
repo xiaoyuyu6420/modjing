@@ -45,22 +45,22 @@ async function loadSites(): Promise<EnterpriseSite[]> {
 export default async function EnterprisePage() {
   const sites = await loadSites()
   return (
-    <main className='min-h-screen bg-gray-950 text-gray-100'>
+    <main className='min-h-screen bg-stone-50 text-stone-900'>
       <div className='mx-auto max-w-7xl px-6 py-10'>
         <header className='mb-6'>
           <h1 className='text-3xl font-bold'>企业合规 API 中转站排行</h1>
-          <p className='mt-2 text-sm text-gray-400'>
+          <p className='mt-2 text-sm text-stone-500'>
             按发票资质、等保级别、数据位置、SLA 承诺等企业级维度筛选；权重公开、可调。
           </p>
         </header>
-        <div className='mb-6 rounded-lg border border-yellow-900/50 bg-yellow-950/30 p-4 text-sm text-yellow-200'>
+        <div className='mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-800'>
           ✦ 企业合规字段开放站长申报中，目前数据为初始状态——本页排序以现有探针数据为主，
           合规字段补齐后排序差异会更明显。
         </div>
         <EnterpriseExplorer sites={sites} />
-        <footer className='mt-10 border-t border-gray-800 pt-4 text-xs text-gray-500'>
+        <footer className='mt-10 border-t border-stone-200 pt-4 text-xs text-stone-400'>
           打分公式与权重默认值见{' '}
-          <a className='text-blue-400 hover:underline' href='/methodology'>
+          <a className='text-brand-600 hover:underline' href='/methodology'>
             /methodology 方法论
           </a>
           。
