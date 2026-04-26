@@ -63,33 +63,33 @@ export default function PlansPage() {
     <div className='max-w-6xl mx-auto px-4 py-10 space-y-10'>
       <header className='space-y-3'>
         <h1 className='text-3xl font-bold'>Coding Plan 对比</h1>
-        <p className='text-gray-400'>
+        <p className='text-stone-500'>
           官方订阅套餐横向对比 — 帮你决定是买 Plus、买 Pro、还是直接走中转站按量付费。
         </p>
-        <p className='text-xs text-gray-500'>
+        <p className='text-xs text-stone-400'>
           数据更新于 2026/06，参考 awesome-coding-plan，价格以官方为准。
         </p>
       </header>
 
-      <section className='bg-gray-900 border border-gray-800 rounded-lg overflow-x-auto'>
+      <section className='bg-white border border-stone-200 rounded-lg overflow-x-auto'>
         <table className='w-full text-sm'>
-          <thead className='bg-gray-800/50 text-gray-300'>
+          <thead className='bg-stone-100 text-stone-600'>
             <tr>
               <th className='text-left px-4 py-3'>平台 / 套餐</th>
               <th className='text-left px-4 py-3'>价格</th>
               <th className='text-left px-4 py-3'>提供模型</th>
-              <th className='text-left px-4 py-3 text-green-400'>优点</th>
-              <th className='text-left px-4 py-3 text-red-400'>缺点</th>
+              <th className='text-left px-4 py-3 text-green-600'>优点</th>
+              <th className='text-left px-4 py-3 text-red-600'>缺点</th>
             </tr>
           </thead>
           <tbody>
             {PLANS.map((p) => (
-              <tr key={p.platform} className='border-t border-gray-800 hover:bg-gray-900/50'>
-                <td className='px-4 py-3 font-medium text-gray-100'>{p.platform}</td>
-                <td className='px-4 py-3 text-blue-400 whitespace-nowrap'>{p.price}</td>
-                <td className='px-4 py-3 text-gray-300'>{p.models}</td>
-                <td className='px-4 py-3 text-gray-400'>{p.pros}</td>
-                <td className='px-4 py-3 text-gray-500'>{p.cons}</td>
+              <tr key={p.platform} className='border-t border-stone-200 hover:bg-white'>
+                <td className='px-4 py-3 font-medium text-stone-900'>{p.platform}</td>
+                <td className='px-4 py-3 text-brand-600 whitespace-nowrap'>{p.price}</td>
+                <td className='px-4 py-3 text-stone-600'>{p.models}</td>
+                <td className='px-4 py-3 text-stone-500'>{p.pros}</td>
+                <td className='px-4 py-3 text-stone-400'>{p.cons}</td>
               </tr>
             ))}
           </tbody>
@@ -102,19 +102,19 @@ export default function PlansPage() {
           {RECOMMENDATIONS.map((r) => (
             <div
               key={r.tag}
-              className='bg-gray-900 border border-gray-800 rounded-lg p-4 space-y-2'
+              className='bg-white border border-stone-200 rounded-lg p-4 space-y-2'
             >
-              <div className='text-xs text-blue-400 font-medium'>{r.tag}</div>
-              <div className='text-lg font-bold text-gray-100'>→ {r.plan}</div>
-              <p className='text-sm text-gray-400'>{r.reason}</p>
+              <div className='text-xs text-brand-600 font-medium'>{r.tag}</div>
+              <div className='text-lg font-bold text-stone-900'>→ {r.plan}</div>
+              <p className='text-sm text-stone-500'>{r.reason}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className='bg-blue-900/20 border border-blue-800 rounded-lg p-5 text-sm text-blue-200'>
+      <section className='bg-brand-50 border border-brand-200 rounded-lg p-5 text-sm text-brand-700'>
         <div className='font-bold mb-2'>什么时候应该走中转站而不是官方订阅？</div>
-        <ul className='list-disc list-inside space-y-1 text-blue-100/90'>
+        <ul className='list-disc list-inside space-y-1 text-brand-700'>
           <li>需要多个模型混用（Claude + GPT + Gemini）— 中转站一个 Key 跑全部</li>
           <li>国内无法支付外币 — 中转站直接微信/支付宝</li>
           <li>需要发票合同 — 套餐订阅通常不开票</li>

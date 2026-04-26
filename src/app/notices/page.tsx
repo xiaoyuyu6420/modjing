@@ -33,12 +33,12 @@ function classifyNotice(text: string): string {
 }
 
 const TAG_STYLES: Record<string, { label: string; cls: string }> = {
-  important: { label: '重要', cls: 'bg-red-950/60 text-red-300 border-red-900' },
-  maintenance: { label: '维护', cls: 'bg-yellow-950/60 text-yellow-300 border-yellow-900' },
-  update: { label: '更新', cls: 'bg-blue-950/60 text-blue-300 border-blue-900' },
-  pricing: { label: '价格', cls: 'bg-orange-950/60 text-orange-300 border-orange-900' },
-  promotion: { label: '活动', cls: 'bg-green-950/60 text-green-300 border-green-900' },
-  notice: { label: '通知', cls: 'bg-gray-800 text-gray-300 border-gray-700' },
+  important: { label: '重要', cls: 'bg-red-50 text-red-700 border-red-200' },
+  maintenance: { label: '维护', cls: 'bg-yellow-50 text-yellow-800 border-yellow-200' },
+  update: { label: '更新', cls: 'bg-brand-50 text-brand-600 border-brand-200' },
+  pricing: { label: '价格', cls: 'bg-orange-50 text-orange-700 border-orange-200' },
+  promotion: { label: '活动', cls: 'bg-brand-50 text-brand-700 border-brand-200' },
+  notice: { label: '通知', cls: 'bg-stone-100 text-stone-600 border-stone-300' },
 }
 
 async function getNotices(): Promise<NoticesResp | null> {
@@ -58,15 +58,15 @@ export default async function NoticesPage() {
   const items = data?.items ?? []
 
   return (
-    <main className='min-h-screen bg-gray-950 text-gray-100'>
+    <main className='min-h-screen bg-stone-50 text-stone-900'>
       <div className='mx-auto max-w-5xl px-6 py-10'>
         <header className='mb-6'>
           <h1 className='text-3xl font-bold'>中转站公告聚合</h1>
-          <p className='mt-2 text-sm text-gray-400'>
+          <p className='mt-2 text-sm text-stone-500'>
             汇总各 API 中转站的最新公告，自动按重要 / 维护 / 价格 / 活动 / 更新分类。
           </p>
           {data?.updatedAt && (
-            <p className='mt-1 text-xs text-gray-500'>
+            <p className='mt-1 text-xs text-stone-400'>
               更新于 {new Date(data.updatedAt).toLocaleString('zh-CN')}
               {data.pagination?.total ? `，上游共 ${data.pagination.total} 条` : ''}
             </p>
@@ -74,11 +74,11 @@ export default async function NoticesPage() {
         </header>
 
         {!data ? (
-          <div className='rounded-lg border border-red-900/50 bg-red-950/20 p-6 text-sm text-red-200'>
+          <div className='rounded-lg border border-red-200 bg-red-50 p-6 text-sm text-red-700'>
             无法从上游 (hvoy.ai) 获取数据，请稍后再试。
           </div>
         ) : items.length === 0 ? (
-          <div className='rounded-lg border border-gray-800 bg-gray-900/50 p-6 text-sm text-gray-400'>
+          <div className='rounded-lg border border-stone-200 bg-white p-6 text-sm text-stone-500'>
             暂无公告
           </div>
         ) : (
@@ -90,7 +90,7 @@ export default async function NoticesPage() {
               return (
                 <li
                   key={n.id}
-                  className='rounded-lg border border-gray-800 bg-gray-900/60 p-4 transition hover:border-gray-700'
+                  className='rounded-lg border border-stone-200 bg-white p-4 transition hover:border-stone-300'
                 >
                   <div className='mb-2 flex flex-wrap items-center gap-2'>
                     <span
@@ -102,20 +102,20 @@ export default async function NoticesPage() {
                       href={n.noticeUrl ?? `https://${n.siteDomain}`}
                       target='_blank'
                       rel='noreferrer'
-                      className='text-sm font-medium text-gray-100 hover:text-blue-400'
+                      className='text-sm font-medium text-stone-900 hover:text-brand-600'
                     >
                       {n.siteName || n.siteDomain || '未知站点'}
                     </a>
                     {n.siteDomain && (
-                      <span className='font-mono text-xs text-gray-500'>{n.siteDomain}</span>
+                      <span className='font-mono text-xs text-stone-400'>{n.siteDomain}</span>
                     )}
                     {n.publishedAt && (
-                      <span className='ml-auto text-xs text-gray-500'>
+                      <span className='ml-auto text-xs text-stone-400'>
                         {new Date(n.publishedAt).toLocaleString('zh-CN')}
                       </span>
                     )}
                   </div>
-                  <p className='text-sm leading-relaxed text-gray-300'>
+                  <p className='text-sm leading-relaxed text-stone-600'>
                     {text}
                     {(n.noticeText?.length ?? 0) > 200 && '…'}
                   </p>
@@ -125,13 +125,13 @@ export default async function NoticesPage() {
           </ul>
         )}
 
-        <footer className='mt-8 border-t border-gray-800 pt-4 text-xs text-gray-500'>
+        <footer className='mt-8 border-t border-stone-200 pt-4 text-xs text-stone-400'>
           数据来源：
           <a
             href='https://hvoy.ai/__relay-notices'
             target='_blank'
             rel='noreferrer'
-            className='text-blue-400 hover:underline'
+            className='text-brand-600 hover:underline'
           >
             hvoy.ai
           </a>

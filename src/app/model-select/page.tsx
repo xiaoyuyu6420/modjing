@@ -88,9 +88,9 @@ export default async function ModelSelectPage({ searchParams }: { searchParams: 
       <div className='mb-8 flex items-center justify-between'>
         <div>
           <h1 className='text-3xl font-bold'>模型择优</h1>
-          <p className='text-gray-400 mt-1 text-sm'>告诉我们你的场景，我们按综合评分推荐 top 3。</p>
+          <p className='text-stone-500 mt-1 text-sm'>告诉我们你的场景，我们按综合评分推荐 top 3。</p>
         </div>
-        <Link href='/' className='text-sm text-gray-400 hover:text-gray-200'>← 返回首页</Link>
+        <Link href='/' className='text-sm text-stone-500 hover:text-stone-800'>← 返回首页</Link>
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-3 gap-3 mb-8'>
@@ -98,10 +98,10 @@ export default async function ModelSelectPage({ searchParams }: { searchParams: 
           <Link
             key={s.key}
             href={`/model-select?s=${s.key}`}
-            className={`block rounded-lg border p-4 transition-colors ${active?.key === s.key ? 'border-blue-500 bg-blue-950/30' : 'border-gray-800 bg-gray-900/40 hover:border-gray-700'}`}
+            className={`block rounded-lg border p-4 transition-colors ${active?.key === s.key ? 'border-brand-300 bg-brand-50' : 'border-stone-200 bg-white hover:border-stone-300'}`}
           >
-            <div className='font-semibold text-gray-100'>{s.title}</div>
-            <div className='text-xs text-gray-400 mt-1'>{s.desc}</div>
+            <div className='font-semibold text-stone-900'>{s.title}</div>
+            <div className='text-xs text-stone-500 mt-1'>{s.desc}</div>
           </Link>
         ))}
       </div>
@@ -110,32 +110,32 @@ export default async function ModelSelectPage({ searchParams }: { searchParams: 
         <div>
           <h2 className='text-xl font-semibold mb-4'>推荐 — {active.title}</h2>
           {picks.length === 0 ? (
-            <div className='text-gray-500 text-sm rounded-lg border border-gray-800 p-8 text-center'>暂无符合条件的渠道</div>
+            <div className='text-stone-400 text-sm rounded-lg border border-stone-200 p-8 text-center'>暂无符合条件的渠道</div>
           ) : (
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
               {picks.map((p, i) => (
-                <div key={p.channelId} className='rounded-lg border border-gray-800 bg-gray-900/50 p-5 flex flex-col'>
+                <div key={p.channelId} className='rounded-lg border border-stone-200 bg-white p-5 flex flex-col'>
                   <div className='flex items-center justify-between mb-3'>
-                    <span className={`px-2 py-0.5 rounded text-xs ${i === 0 ? 'bg-yellow-900/40 text-yellow-300' : 'bg-gray-800 text-gray-400'}`}>#{i + 1}</span>
-                    <span className='text-xs text-gray-500'>{p.base}</span>
+                    <span className={`px-2 py-0.5 rounded text-xs ${i === 0 ? 'bg-yellow-50 text-yellow-800' : 'bg-stone-100 text-stone-500'}`}>#{i + 1}</span>
+                    <span className='text-xs text-stone-400'>{p.base}</span>
                   </div>
-                  <Link href={`/sites/${p.siteId}`} className='text-lg font-semibold text-gray-100 hover:text-blue-400'>{p.siteName}</Link>
-                  <div className='text-xs text-gray-500 mt-0.5'>渠道 {p.channel}</div>
+                  <Link href={`/sites/${p.siteId}`} className='text-lg font-semibold text-stone-900 hover:text-brand-600'>{p.siteName}</Link>
+                  <div className='text-xs text-stone-400 mt-0.5'>渠道 {p.channel}</div>
 
                   <div className='mt-4 space-y-2 text-sm flex-1'>
-                    <div className='flex justify-between'><span className='text-gray-500'>价格</span><span className='text-gray-100 tabular-nums'>{p.price > 0 ? `¥${p.price.toFixed(p.price < 1 ? 4 : 2)} / 1M` : '-'}</span></div>
-                    <div className='flex justify-between'><span className='text-gray-500'>通过率</span><span className='text-gray-100 tabular-nums'>{p.passRate == null ? '-' : `${p.passRate.toFixed(1)}%`}</span></div>
-                    <div className='flex justify-between'><span className='text-gray-500'>综合分</span><span className='text-gray-100 tabular-nums'>{p.weightedScore == null ? '-' : p.weightedScore.toFixed(1)}</span></div>
+                    <div className='flex justify-between'><span className='text-stone-400'>价格</span><span className='text-stone-900 tabular-nums'>{p.price > 0 ? `¥${p.price.toFixed(p.price < 1 ? 4 : 2)} / 1M` : '-'}</span></div>
+                    <div className='flex justify-between'><span className='text-stone-400'>通过率</span><span className='text-stone-900 tabular-nums'>{p.passRate == null ? '-' : `${p.passRate.toFixed(1)}%`}</span></div>
+                    <div className='flex justify-between'><span className='text-stone-400'>综合分</span><span className='text-stone-900 tabular-nums'>{p.weightedScore == null ? '-' : p.weightedScore.toFixed(1)}</span></div>
                   </div>
 
-                  <a href={p.siteUrl} target='_blank' rel='noreferrer noopener' className='mt-4 block text-center px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm transition-colors'>立即使用</a>
+                  <a href={p.siteUrl} target='_blank' rel='noreferrer noopener' className='mt-4 block text-center px-4 py-2 rounded bg-brand-600 hover:bg-brand-700 text-white text-sm transition-colors'>立即使用</a>
                 </div>
               ))}
             </div>
           )}
         </div>
       ) : (
-        <div className='text-gray-500 text-sm rounded-lg border border-gray-800 border-dashed p-12 text-center'>请选一个场景</div>
+        <div className='text-stone-400 text-sm rounded-lg border border-stone-200 border-dashed p-12 text-center'>请选一个场景</div>
       )}
     </main>
   )
