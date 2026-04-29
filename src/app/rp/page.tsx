@@ -81,23 +81,23 @@ const JARGON = [
 
 export default function RpPage() {
   return (
-    <main className='min-h-screen bg-gray-950 text-gray-100'>
+    <main className='min-h-screen bg-stone-50 text-stone-900'>
       <div className='mx-auto max-w-7xl px-6 py-10'>
         <header className='mb-8'>
           <h1 className='text-3xl font-bold'>角色扮演（RP）API 中转站专区</h1>
-          <p className='mt-2 text-sm text-gray-400'>
+          <p className='mt-2 text-sm text-stone-500'>
             酒馆玩家、互动小说、AI 角色扮演场景专用。关注的不是通用价格，而是小克活人感、
             出戏率、审查程度等垂直维度。
           </p>
         </header>
 
-        <section className='mb-8 rounded-lg border border-gray-800 bg-gray-900/60 p-5'>
-          <h2 className='mb-3 text-sm font-semibold text-gray-300'>圈内黑话</h2>
+        <section className='mb-8 rounded-lg border border-stone-200 bg-white p-5'>
+          <h2 className='mb-3 text-sm font-semibold text-stone-600'>圈内黑话</h2>
           <dl className='grid grid-cols-1 gap-3 text-sm md:grid-cols-2'>
             {JARGON.map(([term, def]) => (
               <div key={term} className='flex gap-2'>
-                <dt className='shrink-0 font-semibold text-blue-300'>{term}</dt>
-                <dd className='text-gray-400'>{def}</dd>
+                <dt className='shrink-0 font-semibold text-brand-600'>{term}</dt>
+                <dd className='text-stone-500'>{def}</dd>
               </div>
             ))}
           </dl>
@@ -107,31 +107,31 @@ export default function RpPage() {
           {RP_SITES.map((s) => (
             <article
               key={s.slug}
-              className='flex flex-col rounded-lg border border-gray-800 bg-gray-900/60 p-5 transition hover:border-blue-700'
+              className='flex flex-col rounded-lg border border-stone-200 bg-white p-5 transition hover:border-brand-200'
             >
               <header className='mb-2'>
-                <h3 className='text-lg font-semibold text-gray-100'>{s.name}</h3>
-                <p className='font-mono text-xs text-gray-500'>{s.domain}</p>
+                <h3 className='text-lg font-semibold text-stone-900'>{s.name}</h3>
+                <p className='font-mono text-xs text-stone-400'>{s.domain}</p>
               </header>
-              <p className='mb-3 text-sm text-gray-300'>{s.headline}</p>
+              <p className='mb-3 text-sm text-stone-600'>{s.headline}</p>
               <div className='mb-3 flex flex-wrap gap-1'>
                 {s.tags.map((t) => (
                   <span
                     key={t}
-                    className='rounded bg-blue-900/40 px-2 py-0.5 text-xs text-blue-200'
+                    className='rounded bg-brand-50 px-2 py-0.5 text-xs text-brand-700'
                   >
                     {t}
                   </span>
                 ))}
               </div>
-              <blockquote className='mt-auto border-l-2 border-gray-700 pl-3 text-xs italic text-gray-400'>
+              <blockquote className='mt-auto border-l-2 border-stone-300 pl-3 text-xs italic text-stone-500'>
                 「{s.review}」
               </blockquote>
               <a
                 href={`https://${s.domain}`}
                 target='_blank'
                 rel='noreferrer'
-                className='mt-3 text-xs text-blue-400 hover:underline'
+                className='mt-3 text-xs text-brand-600 hover:underline'
               >
                 访问站点 →
               </a>
@@ -139,16 +139,16 @@ export default function RpPage() {
           ))}
         </section>
 
-        <section className='rounded-lg border border-gray-800 bg-gray-900/40 p-5'>
-          <h2 className='mb-3 text-sm font-semibold text-gray-300'>RP 专属维度（建设中）</h2>
+        <section className='rounded-lg border border-stone-200 bg-white p-5'>
+          <h2 className='mb-3 text-sm font-semibold text-stone-600'>RP 专属维度（建设中）</h2>
           <div className='grid grid-cols-1 gap-3 md:grid-cols-3'>
             {['出戏率', '审查程度', '活人感评分'].map((dim) => (
-              <div key={dim} className='rounded border border-dashed border-gray-700 p-4'>
-                <div className='mb-2 text-xs text-gray-400'>{dim}</div>
-                <div className='h-2 w-full overflow-hidden rounded bg-gray-800'>
-                  <div className='h-full w-1/3 bg-gradient-to-r from-blue-600 to-blue-400 opacity-40' />
+              <div key={dim} className='rounded border border-dashed border-stone-300 p-4'>
+                <div className='mb-2 text-xs text-stone-500'>{dim}</div>
+                <div className='h-2 w-full overflow-hidden rounded bg-stone-100'>
+                  <div className='h-full w-1/3 bg-gradient-to-r from-brand-600 to-brand-500 opacity-40' />
                 </div>
-                <div className='mt-2 text-xs text-gray-600'>待 RP 探针数据接入</div>
+                <div className='mt-2 text-xs text-stone-400'>待 RP 探针数据接入</div>
               </div>
             ))}
           </div>
