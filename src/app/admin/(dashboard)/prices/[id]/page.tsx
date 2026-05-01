@@ -34,8 +34,17 @@ export default async function EditPricePage({
 
       <form action={updatePrice.bind(null, priceId)} className='mj-card p-5 sm:p-6 space-y-4'>
         <div className='grid sm:grid-cols-2 gap-x-5 gap-y-4'>
-          <Field label='价格 (¥)'>
+          <Field label='输入价 (¥/M)'>
             <input name='price' type='number' step='any' defaultValue={p.price} className='mj-input' />
+          </Field>
+          <Field label='输出价 (¥/M)'>
+            <input name='priceOutput' type='number' step='any' defaultValue={p.priceOutput ?? ''} className='mj-input' />
+          </Field>
+          <Field label='缓存输入价 (¥/M)' hint='可选，部分站点无缓存价格'>
+            <input name='priceCached' type='number' step='any' defaultValue={p.priceCached ?? ''} className='mj-input' />
+          </Field>
+          <Field label='缓存创建价 (¥/M)' hint='可选'>
+            <input name='priceCacheCreate' type='number' step='any' defaultValue={p.priceCacheCreate ?? ''} className='mj-input' />
           </Field>
           <Field label='倍率'>
             <input name='multiplier' type='number' step='any' defaultValue={p.multiplier} className='mj-input' />

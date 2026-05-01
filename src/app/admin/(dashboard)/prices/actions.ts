@@ -21,6 +21,9 @@ function bool(fd: FormData, k: string) {
 function buildPrice(fd: FormData): Prisma.SiteModelPriceUncheckedUpdateInput {
   const data: Prisma.SiteModelPriceUncheckedUpdateInput = {
     price: Number(str(fd, 'price') || 0),
+    priceOutput: numOrNull(fd, 'priceOutput'),
+    priceCached: numOrNull(fd, 'priceCached'),
+    priceCacheCreate: numOrNull(fd, 'priceCacheCreate'),
     multiplier: numOrNull(fd, 'multiplier') ?? 1,
     priceUnit: str(fd, 'priceUnit') || 'per_million_tokens',
     afterSales: str(fd, 'afterSales') || 'none',

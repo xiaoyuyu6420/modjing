@@ -10,3 +10,4 @@ next-env.d.ts
 *.db-journal
 coverage/
 test-results/
+.DS_Store

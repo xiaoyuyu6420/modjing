@@ -47,6 +47,9 @@ model SiteModelPrice {
   siteId        Int
   modelName     String
   price         Float
+  priceOutput   Float?
+  priceCached   Float?
+  priceCacheCreate Float?
   priceUnit     String  @default("per_million_tokens")
   multiplier    Float   @default(1.0)
   afterSales    String  @default("none") // none | verify_once | days_30 | lifetime
@@ -61,6 +64,12 @@ model SiteModelPrice {
   avgLatencyMs  Int?      // 平均延迟
   lastProbedAt  DateTime?
   weightedScore Float?    // 综合评分
+
+  // === all-channels 补充（hvoy 跑过探针的精选渠道）===
+  tokenUsageRatio   Float?   // token 使用比率（检测掺水：实际返回 token / 请求 token）
+  sampleCount       Int?     // 探针样本数
+  recentOnlineSeq   String?  // 最近 24 次探测的在线状态序列（1在线/0离线）
+  verificationType  String?  // enterprise | basic | community 等验证类型
 
   site          Site    @relation(fields: [siteId], references: [id])
   priceHistory  PriceHistory[]
