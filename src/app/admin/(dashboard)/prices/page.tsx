@@ -78,7 +78,8 @@ export default async function AdminPricesPage({
           <thead>
             <tr>
               <th className='mj-th'>站点 / 模型</th>
-              <th className='mj-th text-right'>价格</th>
+              <th className='mj-th text-right'>输入价</th>
+              <th className='mj-th text-right'>输出价</th>
               <th className='mj-th text-right'>倍率</th>
               <th className='mj-th text-right'>通过率</th>
               <th className='mj-th text-right'>在线率</th>
@@ -92,7 +93,7 @@ export default async function AdminPricesPage({
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={10} className='py-12 text-center text-stone-400'>
+                <td colSpan={11} className='py-12 text-center text-stone-400'>
                   没有匹配的价格记录
                 </td>
               </tr>
@@ -104,6 +105,9 @@ export default async function AdminPricesPage({
                     <div className='text-xs text-stone-400 mj-mono'>{r.modelName}</div>
                   </td>
                   <td className='mj-td text-right mj-mono text-stone-900'>¥{r.price.toFixed(2)}</td>
+                  <td className='mj-td text-right mj-mono text-stone-600'>
+                    {r.priceOutput == null ? '-' : `¥${r.priceOutput.toFixed(2)}`}
+                  </td>
                   <td className='mj-td text-right mj-mono text-stone-500'>{r.multiplier.toFixed(2)}x</td>
                   <td className='mj-td text-right mj-mono text-stone-600'>
                     {r.passRate == null ? '-' : `${r.passRate.toFixed(1)}%`}

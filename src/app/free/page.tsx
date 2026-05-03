@@ -5,15 +5,18 @@ import { SitesTable, type SiteRow } from '../sites/_components/SitesTable'
 export const dynamic = 'force-dynamic'
 
 export default async function FreeSitesPage() {
-  const sites = await prisma.site.findMany({
-    where: { isFree: true },
-    include: {
-      modelPrices: {
-        select: { weightedScore: true, priceAnomaly: true },
+  const [sites, totalSites] = await Promise.all([
+    prisma.site.findMany({
+      where: { isFree: true },
+      include: {
+        modelPrices: {
+          select: { weightedScore: true, priceAnomaly: true },
+        },
       },
-    },
-    orderBy: { createdAt: 'desc' },
-  })
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.site.count(),
+  ])
 
   const rows: SiteRow[] = sites.map((s) => {
     const scores = s.modelPrices
@@ -59,7 +62,7 @@ export default async function FreeSitesPage() {
         <StatCard label='当前在线' value={online} accent='text-green-600' />
         <StatCard
           label='收录占比'
-          value={`${rows.length ? ((rows.length / 447) * 100).toFixed(1) : '0'}%`}
+          value={`${rows.length && totalSites > 0 ? ((rows.length / totalSites) * 100).toFixed(1) : '0'}%`}
         />
       </div>
 
