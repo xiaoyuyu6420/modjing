@@ -50,6 +50,7 @@ type Pick = {
   base: string
   channel: string
   price: number
+  priceOutput: number | null
   passRate: number | null
   weightedScore: number | null
 }
@@ -76,6 +77,7 @@ export default async function ModelSelectPage({ searchParams }: { searchParams: 
         base: r.modelName.split('@')[0],
         channel: r.modelName.includes('@') ? r.modelName.split('@')[1] : 'default',
         price: r.price * (r.multiplier || 1),
+        priceOutput: r.priceOutput,
         passRate: r.passRate,
         weightedScore: r.weightedScore,
       }))
@@ -123,7 +125,8 @@ export default async function ModelSelectPage({ searchParams }: { searchParams: 
                   <div className='text-xs text-stone-400 mt-0.5'>渠道 {p.channel}</div>
 
                   <div className='mt-4 space-y-2 text-sm flex-1'>
-                    <div className='flex justify-between'><span className='text-stone-400'>价格</span><span className='text-stone-900 tabular-nums'>{p.price > 0 ? `¥${p.price.toFixed(p.price < 1 ? 4 : 2)} / 1M` : '-'}</span></div>
+                    <div className='flex justify-between'><span className='text-stone-400'>输入价</span><span className='text-stone-900 tabular-nums'>{p.price > 0 ? `¥${p.price.toFixed(p.price < 1 ? 4 : 2)} / 1M` : '-'}</span></div>
+                    <div className='flex justify-between'><span className='text-stone-400'>输出价</span><span className='text-stone-900 tabular-nums'>{p.priceOutput && p.priceOutput > 0 ? `¥${p.priceOutput.toFixed(p.priceOutput < 1 ? 4 : 2)} / 1M` : '-'}</span></div>
                     <div className='flex justify-between'><span className='text-stone-400'>通过率</span><span className='text-stone-900 tabular-nums'>{p.passRate == null ? '-' : `${p.passRate.toFixed(1)}%`}</span></div>
                     <div className='flex justify-between'><span className='text-stone-400'>综合分</span><span className='text-stone-900 tabular-nums'>{p.weightedScore == null ? '-' : p.weightedScore.toFixed(1)}</span></div>
                   </div>

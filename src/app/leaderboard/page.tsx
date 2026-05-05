@@ -31,9 +31,12 @@ export default async function LeaderboardPage() {
       siteName: r.site.name,
       channel: r.modelName.includes('@') ? r.modelName.split('@')[1] : 'default',
       price: r.price * (r.multiplier || 1),
+      priceOutput: r.priceOutput,
       passRate: r.passRate,
       onlineRate: r.onlineRate,
       weightedScore: r.weightedScore,
+      tokenUsageRatio: r.tokenUsageRatio,
+      recentOnlineSeq: r.recentOnlineSeq,
       url: r.site.url,
     })
   }

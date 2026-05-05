@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import PriceCell from '@/components/ui/PriceCell'
+import { PriceUnitProvider, PriceUnitToggle, PriceWithUnit } from '@/components/PriceUnit'
 
 export type Channel = {
   id: number
@@ -14,6 +15,9 @@ export type Channel = {
   siteHasInvoice: boolean
   channel: string
   price: number
+  priceOutput: number | null
+  priceCached: number | null
+  priceCacheCreate: number | null
   multiplier: number
   priceUnit: string
   passRate: number | null
@@ -77,87 +81,92 @@ export default function ModelCompareTable({ channels }: { channels: Channel[] })
   const arrow = (k: SortKey) => (sortKey === k ? (asc ? ' ↑' : ' ↓') : '')
 
   return (
-    <div className='space-y-4'>
-      <div className='flex flex-wrap items-center gap-3 text-sm'>
-        <Select label='状态' value={status} onChange={setStatus} options={[
-          { v: 'all', l: '全部' },
-          { v: 'online', l: '在线' },
-          { v: 'unstable', l: '不稳定' },
-          { v: 'offline', l: '离线' },
-        ]} />
-        <Select label='掺水档' value={band} onChange={setBand} options={[
-          { v: 'all', l: '全部' },
-          { v: 'none', l: '未检测' },
-          { v: 'minimal', l: '极低' },
-          { v: 'low', l: '轻微' },
-          { v: 'light', l: '中等' },
-          { v: 'severe', l: '严重' },
-        ]} />
-        <label className='flex items-center gap-1.5 text-stone-600'>
-          <input type='checkbox' checked={freeOnly} onChange={(e) => setFreeOnly(e.target.checked)} className='accent-brand-600' />
-          公益站
-        </label>
-        <label className='flex items-center gap-1.5 text-stone-600'>
-          <input type='checkbox' checked={invoiceOnly} onChange={(e) => setInvoiceOnly(e.target.checked)} className='accent-brand-600' />
-          支持发票
-        </label>
-        <span className='ml-auto text-stone-400 text-xs mj-mono'>{filtered.length} / {channels.length} 条</span>
-      </div>
+    <PriceUnitProvider>
+      <div className='space-y-4'>
+        <div className='flex flex-wrap items-center gap-3 text-sm'>
+          <Select label='状态' value={status} onChange={setStatus} options={[
+            { v: 'all', l: '全部' },
+            { v: 'online', l: '在线' },
+            { v: 'unstable', l: '不稳定' },
+            { v: 'offline', l: '离线' },
+          ]} />
+          <Select label='掺水档' value={band} onChange={setBand} options={[
+            { v: 'all', l: '全部' },
+            { v: 'none', l: '未检测' },
+            { v: 'minimal', l: '极低' },
+            { v: 'low', l: '轻微' },
+            { v: 'light', l: '中等' },
+            { v: 'severe', l: '严重' },
+          ]} />
+          <label className='flex items-center gap-1.5 text-stone-600'>
+            <input type='checkbox' checked={freeOnly} onChange={(e) => setFreeOnly(e.target.checked)} className='accent-brand-600' />
+            公益站
+          </label>
+          <label className='flex items-center gap-1.5 text-stone-600'>
+            <input type='checkbox' checked={invoiceOnly} onChange={(e) => setInvoiceOnly(e.target.checked)} className='accent-brand-600' />
+            支持发票
+          </label>
+          <div className='ml-auto flex items-center gap-3'>
+            <PriceUnitToggle />
+            <span className='text-stone-400 text-xs mj-mono'>{filtered.length} / {channels.length} 条</span>
+          </div>
+        </div>
 
-      <div className='mj-table-wrap'>
-        <table className='mj-table'>
-          <thead>
-            <tr>
-              <th className='mj-th'>站点</th>
-              <th className='mj-th'>渠道</th>
-              <th className='mj-th text-right cursor-pointer hover:text-stone-800' onClick={() => toggleSort('price')}>输入价{arrow('price')}</th>
-              <th className='mj-th text-right text-stone-300'>输出价</th>
-              <th className='mj-th text-right cursor-pointer hover:text-stone-800' onClick={() => toggleSort('passRate')}>通过率{arrow('passRate')}</th>
-              <th className='mj-th text-right cursor-pointer hover:text-stone-800' onClick={() => toggleSort('onlineRate')}>在线率{arrow('onlineRate')}</th>
-              <th className='mj-th text-right cursor-pointer hover:text-stone-800' onClick={() => toggleSort('avgLatencyMs')}>延迟{arrow('avgLatencyMs')}</th>
-              <th className='mj-th'>掺水</th>
-              <th className='mj-th text-right cursor-pointer hover:text-stone-800' onClick={() => toggleSort('weightedScore')}>综合分{arrow('weightedScore')}</th>
-              <th className='mj-th'></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 ? (
-              <tr><td colSpan={10} className='py-12 text-center text-stone-400'>无匹配结果</td></tr>
-            ) : filtered.map((c) => {
-              const st = statusLabel[c.siteStatus] ?? statusLabel.online
-              const bd = c.fakeRateBand ? bandLabel[c.fakeRateBand] : null
-              return (
-                <tr key={c.id} className='mj-row'>
-                  <td className='mj-td'>
-                    <div className='flex items-center gap-1.5 flex-wrap'>
-                      <Link href={`/sites/${c.siteId}`} className='font-medium text-stone-900 hover:text-brand-700'>{c.siteName}</Link>
-                      <span className={`mj-badge ${st.cls}`}>{st.text}</span>
-                      {c.siteIsFree ? <span className='mj-badge border-brand-200 bg-brand-50 text-brand-700'>公益</span> : null}
-                      {c.siteHasInvoice ? <span className='mj-badge border-sky-200 bg-sky-50 text-sky-700'>票</span> : null}
-                    </div>
-                  </td>
-                  <td className='mj-td text-stone-400 text-xs'>{c.channel || 'default'}</td>
-                  <td className='mj-td text-right'><PriceCell price={c.price} unit={c.priceUnit} multiplier={c.multiplier} /></td>
-                  <td className='mj-td text-right text-stone-300'>-</td>
-                  <td className='mj-td text-right'>
-                    {c.passRate == null ? <span className='text-stone-300'>-</span> : <PassBar v={c.passRate} />}
-                  </td>
-                  <td className='mj-td text-right mj-mono text-stone-600'>{c.onlineRate == null ? '-' : `${c.onlineRate.toFixed(1)}%`}</td>
-                  <td className='mj-td text-right mj-mono text-stone-600'>{c.avgLatencyMs == null ? '-' : `${c.avgLatencyMs}ms`}</td>
-                  <td className='mj-td'>
-                    {bd ? <span className={`mj-badge ${bd.cls}`}>{bd.text}</span> : <span className='text-stone-300 text-xs'>-</span>}
-                  </td>
-                  <td className='mj-td text-right mj-mono text-stone-900 font-medium'>{c.weightedScore == null ? '-' : c.weightedScore.toFixed(1)}</td>
-                  <td className='mj-td'>
-                    <a href={c.siteUrl} target='_blank' rel='noreferrer noopener' className='mj-btn-ghost px-2.5 py-1 text-xs'>访问</a>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <div className='mj-table-wrap'>
+          <table className='mj-table'>
+            <thead>
+              <tr>
+                <th className='mj-th'>站点</th>
+                <th className='mj-th'>渠道</th>
+                <th className='mj-th text-right cursor-pointer hover:text-stone-800' onClick={() => toggleSort('price')}>输入价{arrow('price')}</th>
+                <th className='mj-th text-right'>输出价</th>
+                <th className='mj-th text-right cursor-pointer hover:text-stone-800' onClick={() => toggleSort('passRate')}>通过率{arrow('passRate')}</th>
+                <th className='mj-th text-right cursor-pointer hover:text-stone-800' onClick={() => toggleSort('onlineRate')}>在线率{arrow('onlineRate')}</th>
+                <th className='mj-th text-right cursor-pointer hover:text-stone-800' onClick={() => toggleSort('avgLatencyMs')}>延迟{arrow('avgLatencyMs')}</th>
+                <th className='mj-th'>掺水</th>
+                <th className='mj-th text-right cursor-pointer hover:text-stone-800' onClick={() => toggleSort('weightedScore')}>综合分{arrow('weightedScore')}</th>
+                <th className='mj-th'></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
+                <tr><td colSpan={10} className='py-12 text-center text-stone-400'>无匹配结果</td></tr>
+              ) : filtered.map((c) => {
+                const st = statusLabel[c.siteStatus] ?? statusLabel.online
+                const bd = c.fakeRateBand ? bandLabel[c.fakeRateBand] : null
+                return (
+                  <tr key={c.id} className='mj-row'>
+                    <td className='mj-td'>
+                      <div className='flex items-center gap-1.5 flex-wrap'>
+                        <Link href={`/sites/${c.siteId}`} className='font-medium text-stone-900 hover:text-brand-700'>{c.siteName}</Link>
+                        <span className={`mj-badge ${st.cls}`}>{st.text}</span>
+                        {c.siteIsFree ? <span className='mj-badge border-brand-200 bg-brand-50 text-brand-700'>公益</span> : null}
+                        {c.siteHasInvoice ? <span className='mj-badge border-sky-200 bg-sky-50 text-sky-700'>票</span> : null}
+                      </div>
+                    </td>
+                    <td className='mj-td text-stone-400 text-xs'>{c.channel || 'default'}</td>
+                    <td className='mj-td text-right'><PriceCell price={c.price} unit={c.priceUnit} multiplier={c.multiplier} /></td>
+                    <td className='mj-td text-right'><PriceWithUnit price={c.priceOutput} className='text-stone-600' /></td>
+                    <td className='mj-td text-right'>
+                      {c.passRate == null ? <span className='text-stone-300'>-</span> : <PassBar v={c.passRate} />}
+                    </td>
+                    <td className='mj-td text-right mj-mono text-stone-600'>{c.onlineRate == null ? '-' : `${c.onlineRate.toFixed(1)}%`}</td>
+                    <td className='mj-td text-right mj-mono text-stone-600'>{c.avgLatencyMs == null ? '-' : `${c.avgLatencyMs}ms`}</td>
+                    <td className='mj-td'>
+                      {bd ? <span className={`mj-badge ${bd.cls}`}>{bd.text}</span> : <span className='text-stone-300 text-xs'>-</span>}
+                    </td>
+                    <td className='mj-td text-right mj-mono text-stone-900 font-medium'>{c.weightedScore == null ? '-' : c.weightedScore.toFixed(1)}</td>
+                    <td className='mj-td'>
+                      <a href={c.siteUrl} target='_blank' rel='noreferrer noopener' className='mj-btn-ghost px-2.5 py-1 text-xs'>访问</a>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </PriceUnitProvider>
   )
 }
 
