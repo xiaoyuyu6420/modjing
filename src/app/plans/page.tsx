@@ -1,3 +1,8 @@
+import Link from 'next/link'
+import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
+
 const PLANS = [
   {
     platform: 'GPT Plus（土区）',
@@ -58,7 +63,39 @@ const RECOMMENDATIONS = [
   { tag: '快速试错', plan: '中转站按量付费', reason: '套餐绑死风险高，先看 /sites' },
 ]
 
-export default function PlansPage() {
+async function getRelayPrices() {
+  const rows = await prisma.siteModelPrice.findMany({
+    where: {
+      modelName: {
+        startsWith: 'gpt-5.5',
+      },
+    },
+    select: {
+      price: true,
+      priceOutput: true,
+      multiplier: true,
+    },
+    take: 100,
+  })
+
+  const eff = rows.map((r) => ({
+    in: r.price * (r.multiplier || 1),
+    out: (r.priceOutput || 0) * (r.multiplier || 1),
+  })).filter((r) => r.in > 0)
+
+  if (eff.length === 0) return null
+
+  const avgIn = eff.reduce((s, r) => s + r.in, 0) / eff.length
+  const avgOut = eff.reduce((s, r) => s + r.out, 0) / eff.length
+  const minIn = Math.min(...eff.map((r) => r.in))
+  const minOut = Math.min(...eff.filter((r) => r.out > 0).map((r) => r.out))
+
+  return { avgIn, avgOut, minIn, minOut: minOut > 0 ? minOut : null, count: eff.length }
+}
+
+export default async function PlansPage() {
+  const relay = await getRelayPrices()
+
   return (
     <div className='max-w-6xl mx-auto px-4 py-10 space-y-10'>
       <header className='space-y-3'>
@@ -95,6 +132,44 @@ export default function PlansPage() {
           </tbody>
         </table>
       </section>
+
+      {relay && (
+        <section className='bg-stone-50 border border-stone-200 rounded-lg p-5'>
+          <h2 className='text-lg font-bold text-stone-900 mb-3'>中转站按量付费参考 — GPT-5.5</h2>
+          <p className='text-sm text-stone-500 mb-4'>
+            基于模镜收录的 {relay.count} 个中转站渠道的真实价格。注意：输出价通常比输入价高 5-10 倍，实际成本取决于你的输入输出比例。
+          </p>
+          <div className='grid grid-cols-2 md:grid-cols-4 gap-3'>
+            <div className='bg-white border border-stone-200 rounded-lg p-4'>
+              <div className='text-xs text-stone-500'>最低输入价</div>
+              <div className='text-xl font-bold text-brand-600 mt-1'>¥{relay.minIn.toFixed(2)}</div>
+              <div className='text-[10px] text-stone-400'>/ 1M tokens</div>
+            </div>
+            <div className='bg-white border border-stone-200 rounded-lg p-4'>
+              <div className='text-xs text-stone-500'>最低输出价</div>
+              <div className='text-xl font-bold text-brand-600 mt-1'>
+                {relay.minOut ? `¥${relay.minOut.toFixed(2)}` : '-'}
+              </div>
+              <div className='text-[10px] text-stone-400'>/ 1M tokens</div>
+            </div>
+            <div className='bg-white border border-stone-200 rounded-lg p-4'>
+              <div className='text-xs text-stone-500'>平均输入价</div>
+              <div className='text-xl font-bold text-stone-900 mt-1'>¥{relay.avgIn.toFixed(2)}</div>
+              <div className='text-[10px] text-stone-400'>/ 1M tokens</div>
+            </div>
+            <div className='bg-white border border-stone-200 rounded-lg p-4'>
+              <div className='text-xs text-stone-500'>平均输出价</div>
+              <div className='text-xl font-bold text-stone-900 mt-1'>¥{relay.avgOut.toFixed(2)}</div>
+              <div className='text-[10px] text-stone-400'>/ 1M tokens</div>
+            </div>
+          </div>
+          <div className='mt-4'>
+            <Link href='/sites' className='text-sm text-brand-600 hover:text-brand-700 font-medium'>
+              查看所有中转站价格 →
+            </Link>
+          </div>
+        </section>
+      )}
 
       <section className='space-y-4'>
         <h2 className='text-2xl font-bold'>适合谁</h2>
