@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!--
+  模镜 Miro · 前端原型（首页）
+  ───────────────────────────────────────────────────────────
+  用法：双击本文件即可在浏览器打开（需联网加载 Tailwind CDN）。
+  这是「原型」：改完发回，我会把你的改动同步回真实 Next.js 代码。
+
+  改样式看这里 ↓
+    1) <script>tailwind.config</script>  —— 品牌色 brand 色阶（对应真实代码 globals.css 的 @theme）
+    2) <style> 顶部「设计令牌」+ mj-* 组件类 —— 对应真实 globals.css 的 @layer components
+    3) <body> 里的 class —— 对应真实组件 Nav.tsx / page.tsx / Footer.tsx
+  ───────────────────────────────────────────────────────────
+-->
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>模镜 Miro · 中转站评测平台</title>
+
+    <!-- Tailwind Play CDN（原型用；真实项目走构建版 Tailwind v4） -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // 品牌色 / 字体令牌 —— 改这里 = 改全站主色
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7',
+                400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857',
+                800: '#065f46', 900: '#064e3b', 950: '#022c22',
+              },
+            },
+            fontFamily: {
+              sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto',
+                'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+              mono: ['ui-monospace', 'SF Mono', 'JetBrains Mono', 'Menlo', 'Consolas', 'monospace'],
+            },
+          },
+        },
+      }
+    </script>
+
+    <style>
+      /* ════════ 设计令牌（与真实 globals.css @layer base 对应）════════ */
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: #fafaf9;          /* stone-50 暖中性画布 */
+        color: #1c1917;               /* stone-900 */
+        font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+          'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::selection { background: #a7f3d0; color: #022c22; }
+      :focus-visible { outline: none; box-shadow: 0 0 0 2px #fafaf9, 0 0 0 4px rgba(5,150,105,.45); }
+      a { color: inherit; text-decoration: none; }
+      * { scrollbar-width: thin; scrollbar-color: #d6d3d1 transparent; }
+      *::-webkit-scrollbar { width: 10px; height: 10px; }
+      *::-webkit-scrollbar-thumb { background: #e7e5e4; border-radius: 9999px; border: 3px solid transparent; background-clip: content-box; }
+
+      /* ════════ mj-* 组件类（与真实 globals.css @layer components 对应）════════ */
+      .mj-card { background: #fff; border: 1px solid rgba(231,229,228,.8); border-radius: .75rem; }
+      .mj-card-hover { transition: border-color .15s ease; }
+      .mj-card-hover:hover { border-color: #d6d3d1; }
+      .mj-muted { color: #78716c; }          /* stone-500 */
+      .mj-faint { color: #a8a29e; }          /* stone-400 */
+      .mj-mono { font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+                 font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+
+      .mj-input { width: 100%; background: #fff; border: 1px solid #d6d3d1; border-radius: .5rem;
+        padding: .5rem .75rem; font-size: .875rem; color: #1c1917; outline: none; transition: border-color .15s; }
+      .mj-input::placeholder { color: #a8a29e; }
+      .mj-input:focus { border-color: #10b981; }
+
+      .mj-select { background: #fff; border: 1px solid #d6d3d1; border-radius: .5rem;
+        padding: .5rem .75rem; font-size: .875rem; color: #1c1917; outline: none; }
+
+      .mj-label { display: block; font-size: .75rem; font-weight: 500; color: #57534e; margin-bottom: .375rem; }
+
+      .mj-btn { display: inline-flex; align-items: center; justify-content: center; gap: .375rem;
+        border-radius: .5rem; padding: .5rem 1rem; font-size: .875rem; font-weight: 500;
+        transition: background-color .15s, color .15s, border-color .15s; border: none; cursor: pointer;
+        text-decoration: none; }
+      .mj-btn-primary { background: #059669; color: #fff; }
+      .mj-btn-primary:hover { background: #047857; }
+      .mj-btn-ghost { background: #fff; border: 1px solid #d6d3d1; color: #44403c; }
+      .mj-btn-ghost:hover { background: #fafaf9; }
+      .mj-btn-danger { background: #fff; border: 1px solid #fecaca; color: #dc2626; }
+      .mj-btn-danger:hover { background: #fef2f2; }
+      .mj-btn-link { font-size: .875rem; color: #059669; }
+      .mj-btn-link:hover { color: #047857; }
+
+      .mj-badge { display: inline-flex; align-items: center; gap: .25rem; border-radius: .375rem;
+        border: 1px solid; padding: .125rem .375rem; font-size: 11px; font-weight: 500; line-height: 1; }
+    </style>
+  </head>
+
+  <body>
+    <div style="min-height:100vh;display:flex;flex-direction:column">
+
+      <!-- ════════ 导航（对应 src/components/Nav.tsx）════════ -->
+      <header class="sticky top-0 z-50 bg-stone-50/85 backdrop-blur-md border-b border-stone-200/80">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="flex items-center justify-between py-2.5">
+            <a href="#" class="flex items-center gap-2 shrink-0">
+              <span class="grid h-7 w-7 place-items-center rounded-lg text-white shadow-sm" style="background:linear-gradient(135deg,#10b981,#047857)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2" />
+                  <circle cx="12" cy="12" r="3" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="flex items-baseline gap-1.5">
+                <span class="text-[17px] font-bold tracking-tight text-stone-900">模镜</span>
+                <span class="text-xs text-stone-400">· Miro</span>
+              </span>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-0.5">
+              <!-- 导航项 -->
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-brand-700 bg-brand-50 font-medium rounded-md">首页</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">站点</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">模型</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">排行</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">模型择优</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">
+                企业合规 <span class="ml-1 inline-block px-1 py-0.5 text-[9px] font-bold rounded bg-brand-600 text-white align-top">NEW</span>
+              </a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">RP 专区</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">测速</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">公告</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">Codex 雷达</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">套餐对比</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">
+                方法论 <span class="ml-1 inline-block px-1 py-0.5 text-[9px] font-bold rounded bg-brand-600 text-white align-top">NEW</span>
+              </a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">公益站</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">咨询</a>
+            </nav>
+
+            <button onclick="document.getElementById('mobileNav').classList.toggle('hidden')"
+              class="lg:hidden p-2 -mr-2 text-stone-600 hover:text-stone-900" aria-label="菜单">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+
+          <nav id="mobileNav" class="hidden lg:hidden pb-3 grid grid-cols-2 gap-0.5">
+            <a href="#" class="px-3 py-2 text-sm rounded-md text-brand-700 bg-brand-50 font-medium">首页</a>
+            <a href="#" class="px-3 py-2 text-sm rounded-md text-stone-600 hover:bg-stone-100">站点</a>
+            <a href="#" class="px-3 py-2 text-sm rounded-md text-stone-600 hover:bg-stone-100">模型</a>
+            <a href="#" class="px-3 py-2 text-sm rounded-md text-stone-600 hover:bg-stone-100">排行</a>
+            <a href="#" class="px-3 py-2 text-sm rounded-md text-stone-600 hover:bg-stone-100">企业合规</a>
+            <a href="#" class="px-3 py-2 text-sm rounded-md text-stone-600 hover:bg-stone-100">方法论</a>
+          </nav>
+        </div>
+      </header>
+
+      <!-- ════════ 主体（对应 src/app/page.tsx）════════ -->
+      <main class="flex-1">
+        <div class="space-y-24">
+
+          <!-- hero -->
+          <section class="relative overflow-hidden">
+            <div aria-hidden="true"
+              class="pointer-events-none absolute inset-x-0 -top-32 h-[420px]"
+              style="background:radial-gradient(60% 60% at 50% 0%, rgba(16,185,129,0.16), transparent 70%)"></div>
+            <div class="relative max-w-3xl mx-auto px-4 pt-24 pb-16 text-center space-y-7">
+              <div class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">
+                <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>
+                模镜 Miro · 中转站评测平台
+              </div>
+              <h1 class="text-5xl sm:text-6xl font-bold tracking-tight text-stone-900 leading-[1.05]">
+                做裁判，<span class="text-brand-600">不做运动员</span>
+              </h1>
+              <p class="text-lg text-stone-500 max-w-xl mx-auto leading-relaxed">
+                消除大模型 API 服务的信息不对称。价格、健康度、掺水检测、企业合规 —— 全部透明可复现。
+              </p>
+              <form action="#" class="flex gap-2 max-w-lg mx-auto pt-1">
+                <input type="text" name="q" placeholder="搜站点名 / 模型 / 厂商..." class="mj-input flex-1" />
+                <button type="submit" class="mj-btn-primary px-6">搜索</button>
+              </form>
+              <div class="flex flex-wrap gap-2.5 justify-center pt-1">
+                <a href="#" class="mj-btn-primary">看排行榜</a>
+                <a href="#" class="mj-btn-ghost">企业合规 →</a>
+                <a href="#" class="mj-btn-ghost">测我的 Key →</a>
+              </div>
+            </div>
+          </section>
+
+          <!-- features -->
+          <section class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-5">
+              <a href="#" class="group mj-card mj-card-hover p-6 space-y-3">
+                <h3 class="text-lg font-bold text-stone-900">447 家中转站尽收眼底</h3>
+                <p class="text-sm text-stone-500 leading-relaxed">全网覆盖最广的中转站数据库，含价格、健康度、合规字段、用户评价，每日更新。</p>
+                <div class="text-sm text-brand-600 group-hover:text-brand-700">浏览站点 →</div>
+              </a>
+              <a href="#" class="group mj-card mj-card-hover p-6 space-y-3">
+                <h3 class="text-lg font-bold text-stone-900">方法论完全公开 · 权重可调</h3>
+                <p class="text-sm text-stone-500 leading-relaxed">32 道探针 + 4 维指纹算法 + 5 项加权评分公式全部开源。企业用户可拖滑块自定义权重。</p>
+                <div class="text-sm text-brand-600 group-hover:text-brand-700">看方法论 →</div>
+              </a>
+              <a href="#" class="group mj-card mj-card-hover p-6 space-y-3">
+                <h3 class="text-lg font-bold text-stone-900">企业合规专区独家</h3>
+                <p class="text-sm text-stone-500 leading-relaxed">发票、等保、数据本地化、合同模板、SLA 承诺 — 这些字段只有模镜在追踪。</p>
+                <div class="text-sm text-brand-600 group-hover:text-brand-700">进合规专区 →</div>
+              </a>
+            </div>
+          </section>
+
+          <!-- stats -->
+          <section class="max-w-4xl mx-auto px-4">
+            <div class="grid grid-cols-3 gap-px bg-stone-200 rounded-xl overflow-hidden border border-stone-200">
+              <div class="bg-white p-6 text-center">
+                <div class="text-4xl font-bold mj-mono text-brand-600">447</div>
+                <div class="text-xs text-stone-500 mt-1.5">已收录中转站</div>
+              </div>
+              <div class="bg-white p-6 text-center">
+                <div class="text-4xl font-bold mj-mono text-stone-900">12,580</div>
+                <div class="text-xs text-stone-500 mt-1.5">价格条目</div>
+              </div>
+              <div class="bg-white p-6 text-center">
+                <div class="text-4xl font-bold mj-mono text-stone-900">32</div>
+                <div class="text-xs text-stone-500 mt-1.5">道探针 prompt</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- trust -->
+          <section class="max-w-4xl mx-auto px-4 text-center space-y-8 pb-10">
+            <h2 class="text-2xl font-bold text-stone-900">为什么相信模镜</h2>
+            <div class="grid sm:grid-cols-3 gap-4 text-left">
+              <div class="mj-card p-5">
+                <div class="text-stone-900 font-bold mb-1.5">透明</div>
+                <p class="text-sm text-stone-500 leading-relaxed">探针 prompt、评分公式、权重默认值 —— 全部公开在 /methodology</p>
+              </div>
+              <div class="mj-card p-5">
+                <div class="text-stone-900 font-bold mb-1.5">中立</div>
+                <p class="text-sm text-stone-500 leading-relaxed">不卖 API、不收推广费、不接广告。收入来自企业咨询。</p>
+              </div>
+              <div class="mj-card p-5">
+                <div class="text-stone-900 font-bold mb-1.5">可质疑</div>
+                <p class="text-sm text-stone-500 leading-relaxed">评分有异议？欢迎在 GitHub 提 issue / PR，我们公开讨论。</p>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </main>
+
+      <!-- ════════ 页脚（对应 src/components/Footer.tsx）════════ -->
+      <footer class="border-t border-stone-200 bg-white mt-20">
+        <div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="grid h-6 w-6 place-items-center rounded-md text-white" style="background:linear-gradient(135deg,#10b981,#047857)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2" />
+                  <circle cx="12" cy="12" r="3" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="text-stone-900 font-bold text-base">模镜 · Miro</span>
+            </div>
+            <p class="text-stone-500 max-w-md leading-relaxed">
+              中转站评测平台 — 做裁判，不做运动员。消除大模型 API 服务的信息不对称，所有评分透明可复现，所有方法论公开可质疑。
+            </p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="text-stone-700 font-medium mb-1">关于</div>
+            <a href="#" class="text-stone-500 hover:text-brand-700">方法论公开</a>
+            <a href="#" class="text-stone-500 hover:text-brand-700">联系我们</a>
+            <a href="#" class="text-stone-500 hover:text-brand-700">用户协议</a>
+            <a href="#" class="text-stone-500 hover:text-brand-700">隐私政策</a>
+          </div>
+          <div class="text-stone-500">
+            <div class="text-stone-700 font-medium mb-2">数据归属</div>
+            <p>部分探针数据来源 <span class="text-stone-700">hvoy.ai</span> 公开 API，致谢。</p>
+            <p class="mt-2 text-xs text-stone-400">评测结果仅供参考，最终决策请以实测为准。</p>
+          </div>
+        </div>
+        <div class="border-t border-stone-200 py-4 text-center text-xs text-stone-400">
+          © 2026 模镜 · Miro · modjing.com
+        </div>
+      </footer>
+
+    </div>
+  </body>
+</html>

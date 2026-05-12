@@ -13,7 +13,9 @@
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:report": "playwright show-report",
-    "import-hvoy": "node scripts/import-hvoy.mjs"
+    "import-hvoy": "node scripts/import-hvoy.mjs",
+    "sync-hvoy": "node scripts/sync-hvoy.mjs",
+    "sync-hvoy:full": "node scripts/sync-hvoy.mjs --full"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",
