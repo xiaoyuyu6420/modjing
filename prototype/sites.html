@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<!--
+  模镜 Miro · 前端原型（站点列表页）
+  ───────────────────────────────────────────────────────────
+  对应真实代码：src/app/sites/page.tsx + _components/SitesTable.tsx
+  用法：双击打开（需联网加载 Tailwind CDN）。
+  改完发回，我会同步到真实 Next.js 代码。
+  ───────────────────────────────────────────────────────────
+-->
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>中转站列表 · 模镜 Miro</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7',
+                400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857',
+                800: '#065f46', 900: '#064e3b', 950: '#022c22',
+              },
+            },
+            fontFamily: {
+              sans: ['ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto',
+                'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+              mono: ['ui-monospace', 'SF Mono', 'JetBrains Mono', 'Menlo', 'Consolas', 'monospace'],
+            },
+          },
+        },
+      }
+    </script>
+
+    <style>
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: #fafaf9;
+        color: #1c1917;
+        font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+          'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::selection { background: #a7f3d0; color: #022c22; }
+      :focus-visible { outline: none; box-shadow: 0 0 0 2px #fafaf9, 0 0 0 4px rgba(5,150,105,.45); }
+      a { color: inherit; text-decoration: none; }
+      * { scrollbar-width: thin; scrollbar-color: #d6d3d1 transparent; }
+      *::-webkit-scrollbar { width: 10px; height: 10px; }
+      *::-webkit-scrollbar-thumb { background: #e7e5e4; border-radius: 9999px; border: 3px solid transparent; background-clip: content-box; }
+
+      .mj-card { background: #fff; border: 1px solid rgba(231,229,228,.8); border-radius: .75rem; }
+      .mj-card-hover { transition: border-color .15s ease; }
+      .mj-card-hover:hover { border-color: #d6d3d1; }
+      .mj-muted { color: #78716c; }
+      .mj-faint { color: #a8a29e; }
+      .mj-mono { font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+                 font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+
+      .mj-input { width: 100%; background: #fff; border: 1px solid #d6d3d1; border-radius: .5rem;
+        padding: .5rem .75rem; font-size: .875rem; color: #1c1917; outline: none; transition: border-color .15s; }
+      .mj-input::placeholder { color: #a8a29e; }
+      .mj-input:focus { border-color: #10b981; }
+
+      .mj-select { background: #fff; border: 1px solid #d6d3d1; border-radius: .5rem;
+        padding: .5rem .75rem; font-size: .875rem; color: #1c1917; outline: none; }
+
+      .mj-btn { display: inline-flex; align-items: center; justify-content: center; gap: .375rem;
+        border-radius: .5rem; padding: .5rem 1rem; font-size: .875rem; font-weight: 500;
+        transition: background-color .15s, color .15s, border-color .15s; border: none; cursor: pointer; text-decoration: none; }
+      .mj-btn-primary { background: #059669; color: #fff; }
+      .mj-btn-primary:hover { background: #047857; }
+      .mj-btn-ghost { background: #fff; border: 1px solid #d6d3d1; color: #44403c; }
+      .mj-btn-ghost:hover { background: #fafaf9; }
+      .mj-btn-link { font-size: .875rem; color: #059669; }
+      .mj-btn-link:hover { color: #047857; }
+
+      .mj-badge { display: inline-flex; align-items: center; gap: .25rem; border-radius: .375rem;
+        border: 1px solid; padding: .125rem .375rem; font-size: 11px; font-weight: 500; line-height: 1; }
+
+      .mj-table-wrap { overflow-x: auto; border-radius: .75rem; border: 1px solid rgba(231,229,228,.8); background: #fff; }
+      .mj-table { width: 100%; font-size: .875rem; border-collapse: collapse; }
+      .mj-th { background: rgba(250,250,249,.8); text-align: left; font-size: .75rem; font-weight: 600;
+        text-transform: uppercase; letter-spacing: .05em; color: #78716c; padding: .625rem 1rem; border-bottom: 1px solid #e7e5e4; }
+      .mj-td { padding: .75rem 1rem; border-bottom: 1px solid #f5f5f4; vertical-align: middle; }
+      .mj-row { transition: background-color .15s; }
+      .mj-row:hover { background: rgba(250,250,249,.7); }
+    </style>
+  </head>
+
+  <body>
+    <div style="min-height:100vh;display:flex;flex-direction:column">
+
+      <!-- 导航（同首页） -->
+      <header class="sticky top-0 z-50 bg-stone-50/85 backdrop-blur-md border-b border-stone-200/80">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="flex items-center justify-between py-2.5">
+            <a href="#" class="flex items-center gap-2 shrink-0">
+              <span class="grid h-7 w-7 place-items-center rounded-lg text-white shadow-sm" style="background:linear-gradient(135deg,#10b981,#047857)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2" />
+                  <circle cx="12" cy="12" r="3" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="flex items-baseline gap-1.5">
+                <span class="text-[17px] font-bold tracking-tight text-stone-900">模镜</span>
+                <span class="text-xs text-stone-400">· Miro</span>
+              </span>
+            </a>
+            <nav class="hidden lg:flex items-center gap-0.5">
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">首页</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-brand-700 bg-brand-50 font-medium rounded-md whitespace-nowrap">站点</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">模型</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">排行</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">企业合规</a>
+              <a href="#" class="px-2.5 py-1.5 text-[13px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-md whitespace-nowrap">方法论</a>
+            </nav>
+            <button onclick="document.getElementById('mobileNav').classList.toggle('hidden')"
+              class="lg:hidden p-2 -mr-2 text-stone-600 hover:text-stone-900" aria-label="菜单">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+          <nav id="mobileNav" class="hidden lg:hidden pb-3 grid grid-cols-2 gap-0.5">
+            <a href="#" class="px-3 py-2 text-sm rounded-md text-stone-600 hover:bg-stone-100">首页</a>
+            <a href="#" class="px-3 py-2 text-sm rounded-md text-brand-700 bg-brand-50 font-medium">站点</a>
+            <a href="#" class="px-3 py-2 text-sm rounded-md text-stone-600 hover:bg-stone-100">模型</a>
+            <a href="#" class="px-3 py-2 text-sm rounded-md text-stone-600 hover:bg-stone-100">排行</a>
+          </nav>
+        </div>
+      </header>
+
+      <!-- 主体 -->
+      <main class="flex-1">
+        <div class="min-h-screen p-6 max-w-7xl mx-auto space-y-6">
+
+          <!-- 页头 -->
+          <div class="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h1 class="text-3xl font-bold tracking-tight">中转站列表</h1>
+              <p class="text-stone-500 mt-1.5 text-sm">模镜收录的所有 API 中转站，按综合评分排序。点击站点名查看详情。</p>
+            </div>
+            <a href="#" class="text-sm text-stone-500 hover:text-brand-700 mt-1">← 返回首页</a>
+          </div>
+
+          <!-- 统计卡片 -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="mj-card p-4">
+              <div class="text-xs text-stone-500">总站点</div>
+              <div class="text-2xl font-bold mt-1 mj-mono text-stone-900">12</div>
+            </div>
+            <div class="mj-card p-4">
+              <div class="text-xs text-stone-500">在线</div>
+              <div class="text-2xl font-bold mt-1 mj-mono text-brand-600">10</div>
+            </div>
+            <div class="mj-card p-4">
+              <div class="text-xs text-stone-500">公益站</div>
+              <div class="text-2xl font-bold mt-1 mj-mono text-sky-600">2</div>
+            </div>
+            <div class="mj-card p-4">
+              <div class="text-xs text-stone-500">支持发票</div>
+              <div class="text-2xl font-bold mt-1 mj-mono text-violet-600">7</div>
+            </div>
+          </div>
+
+          <!-- 筛选栏 -->
+          <div class="flex flex-wrap items-center gap-3">
+            <input id="searchInput" type="text" placeholder="搜索站点名 / 域名" class="mj-input flex-1 min-w-[220px] max-w-xs" />
+            <select id="sortSelect" class="mj-select">
+              <option value="score-desc">综合评分 高→低</option>
+              <option value="score-asc">综合评分 低→高</option>
+              <option value="models-desc">模型数 多→少</option>
+              <option value="created-desc">收录时间 新→旧</option>
+            </select>
+            <label class="text-sm text-stone-600 flex items-center gap-2 cursor-pointer">
+              <input id="freeOnly" type="checkbox" class="accent-brand-600" />
+              仅看公益站
+            </label>
+            <span id="countLabel" class="text-xs text-stone-400">共 12 条</span>
+          </div>
+
+          <!-- 表格 -->
+          <div class="mj-table-wrap">
+            <table class="mj-table">
+              <thead>
+                <tr>
+                  <th class="mj-th">站点</th>
+                  <th class="mj-th">状态</th>
+                  <th class="mj-th">综合评分</th>
+                  <th class="mj-th">模型数</th>
+                  <th class="mj-th">价格异常</th>
+                  <th class="mj-th">企业合规</th>
+                  <th class="mj-th">类型</th>
+                  <th class="mj-th">收录</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+                <!-- 由 JS 渲染 -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 分页（静态展示） -->
+          <div class="flex items-center justify-center gap-2 text-sm">
+            <button class="px-3 py-1.5 border border-stone-300 rounded-lg bg-white text-stone-600 opacity-40 cursor-not-allowed">上一页</button>
+            <span class="text-stone-500 mj-mono">1 / 1</span>
+            <button class="px-3 py-1.5 border border-stone-300 rounded-lg bg-white text-stone-600 opacity-40 cursor-not-allowed">下一页</button>
+          </div>
+
+        </div>
+      </main>
+
+      <!-- 页脚 -->
+      <footer class="border-t border-stone-200 bg-white mt-20">
+        <div class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
+          <div class="md:col-span-2">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="grid h-6 w-6 place-items-center rounded-md text-white" style="background:linear-gradient(135deg,#10b981,#047857)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2" />
+                  <circle cx="12" cy="12" r="3" fill="currentColor" />
+                </svg>
+              </span>
+              <span class="text-stone-900 font-bold text-base">模镜 · Miro</span>
+            </div>
+            <p class="text-stone-500 max-w-md leading-relaxed">中转站评测平台 — 做裁判，不做运动员。消除大模型 API 服务的信息不对称。</p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="text-stone-700 font-medium mb-1">关于</div>
+            <a href="#" class="text-stone-500 hover:text-brand-700">方法论公开</a>
+            <a href="#" class="text-stone-500 hover:text-brand-700">联系我们</a>
+          </div>
+          <div class="text-stone-500">
+            <div class="text-stone-700 font-medium mb-2">数据归属</div>
+            <p>部分探针数据来源 <span class="text-stone-700">hvoy.ai</span> 公开 API，致谢。</p>
+          </div>
+        </div>
+        <div class="border-t border-stone-200 py-4 text-center text-xs text-stone-400">© 2026 模镜 · Miro · modjing.com</div>
+      </footer>
+
+    </div>
+
+    <script>
+      // 示例数据集（与真实 Prisma 查询结构一致）
+      const SITES = [
+        { id:1, name:'PackyCode', url:'https://packyapi.com', status:'online', isFree:false, hasInvoice:true, compliance:'iso27001', models:45, anomaly:0, score:92.3, date:'2025-12-10' },
+        { id:2, name:'RightCode', url:'https://rightcode.ai', status:'online', isFree:false, hasInvoice:true, compliance:'basic', models:38, anomaly:0, score:89.1, date:'2025-12-08' },
+        { id:3, name:'DuckCoding', url:'https://duckcoding.com', status:'online', isFree:false, hasInvoice:false, compliance:'none', models:52, anomaly:0, score:87.5, date:'2025-12-05' },
+        { id:4, name:'RunAPI', url:'https://runapi.io', status:'online', isFree:false, hasInvoice:true, compliance:'mlps2', models:61, anomaly:0, score:94.2, date:'2025-12-03' },
+        { id:5, name:'ClaudeCN', url:'https://claudecn.com', status:'online', isFree:true, hasInvoice:false, compliance:'none', models:28, anomaly:0, score:85.0, date:'2025-11-28' },
+        { id:6, name:'AOK', url:'https://aokapi.com', status:'online', isFree:false, hasInvoice:true, compliance:'none', models:33, anomaly:1, score:88.7, date:'2025-11-25' },
+        { id:7, name:'灵算', url:'https://lingsuan.ai', status:'online', isFree:false, hasInvoice:true, compliance:'basic', models:25, anomaly:0, score:86.4, date:'2025-11-20' },
+        { id:8, name:'ModCon', url:'https://modcon.io', status:'unstable', isFree:false, hasInvoice:false, compliance:'none', models:19, anomaly:2, score:78.2, date:'2025-11-15' },
+        { id:9, name:'MuskAI', url:'https://muskai.com', status:'online', isFree:false, hasInvoice:true, compliance:'none', models:22, anomaly:0, score:81.5, date:'2025-11-10' },
+        { id:10, name:'UU API', url:'https://uuapi.com', status:'offline', isFree:false, hasInvoice:false, compliance:'none', models:15, anomaly:0, score:72.0, date:'2025-11-05' },
+        { id:11, name:'球球Token', url:'https://qiutoken.com', status:'online', isFree:false, hasInvoice:true, compliance:'basic', models:41, anomaly:0, score:90.1, date:'2025-10-28' },
+        { id:12, name:'聪敏AI', url:'https://congming.ai', status:'online', isFree:true, hasInvoice:false, compliance:'none', models:30, anomaly:0, score:83.7, date:'2025-10-20' },
+      ];
+
+      const COMPLIANCE_LABELS = { none:'无', basic:'基础', iso27001:'ISO27001', mlps2:'等保二级', mlps3:'等保三级' };
+      const STATUS_STYLES = { online:'border-brand-200 bg-brand-50 text-brand-700', unstable:'border-amber-200 bg-amber-50 text-amber-700', offline:'border-red-200 bg-red-50 text-red-600' };
+      const STATUS_LABELS = { online:'在线', unstable:'不稳定', offline:'离线' };
+
+      function renderTable(rows) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = rows.length === 0
+          ? '<tr><td colspan="8" class="py-12 text-center text-stone-400">没有匹配的站点</td></tr>'
+          : rows.map(s => `
+              <tr class="mj-row">
+                <td class="mj-td">
+                  <a href="#" class="font-medium text-stone-900 hover:text-brand-700">${s.name}</a>
+                  <a href="${s.url}" target="_blank" class="ml-2 text-xs text-stone-400 hover:text-stone-600">${s.url.replace(/^https?:\/\//,'')} ↗</a>
+                </td>
+                <td class="mj-td"><span class="mj-badge ${STATUS_STYLES[s.status]}"><span class="h-1.5 w-1.5 rounded-full bg-current opacity-70"></span>${STATUS_LABELS[s.status]}</span></td>
+                <td class="mj-td">${s.score == null ? '<span class="text-stone-300">-</span>' : `<span class="mj-mono text-brand-600">${s.score.toFixed(1)}</span>`}</td>
+                <td class="mj-td mj-mono text-stone-700">${s.models}</td>
+                <td class="mj-td">${s.anomaly > 0 ? `<span class="text-red-600 text-xs font-medium">${s.anomaly}</span>` : '<span class="text-stone-300 text-xs">-</span>'}</td>
+                <td class="mj-td">
+                  <div class="flex flex-wrap gap-1">
+                    ${s.hasInvoice ? '<span class="mj-badge border-sky-200 bg-sky-50 text-sky-700">票</span>' : ''}
+                    ${s.compliance && s.compliance !== 'none' ? `<span class="mj-badge border-violet-200 bg-violet-50 text-violet-700">${COMPLIANCE_LABELS[s.compliance]}</span>` : ''}
+                    ${!s.hasInvoice && (!s.compliance || s.compliance === 'none') ? '<span class="text-stone-300 text-xs">-</span>' : ''}
+                  </div>
+                </td>
+                <td class="mj-td">${s.isFree ? '<span class="text-brand-600 text-xs font-medium">公益</span>' : '<span class="text-stone-400 text-xs">商用</span>'}</td>
+                <td class="mj-td text-stone-400 text-xs">${s.date}</td>
+              </tr>`).join('');
+        document.getElementById('countLabel').textContent = `共 ${rows.length} 条`;
+      }
+
+      function applyFilters() {
+        const q = document.getElementById('searchInput').value.trim().toLowerCase();
+        const freeOnly = document.getElementById('freeOnly').checked;
+        let filtered = SITES.filter(s => {
+          if (q && !s.name.toLowerCase().includes(q) && !s.url.toLowerCase().includes(q)) return false;
+          if (freeOnly && !s.isFree) return false;
+          return true;
+        });
+        // 简化：排序按默认（score-desc）
+        renderTable(filtered);
+      }
+
+      document.getElementById('searchInput').addEventListener('input', applyFilters);
+      document.getElementById('freeOnly').addEventListener('change', applyFilters);
+      renderTable(SITES);
+    </script>
+  </body>
+</html>
