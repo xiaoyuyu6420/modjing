@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { updatePrice, deletePrice } from '../actions'
 import ConfirmDelete from '@/app/admin/_components/ConfirmDelete'
+import ProbeRunner from '@/app/admin/_components/ProbeRunner'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,10 +15,17 @@ export default async function EditPricePage({
   const priceId = Number(id)
   if (!Number.isFinite(priceId)) notFound()
 
-  const p = await prisma.siteModelPrice.findUnique({
-    where: { id: priceId },
-    include: { site: { select: { name: true } } },
-  })
+  const [p, probeHistory] = await Promise.all([
+    prisma.siteModelPrice.findUnique({
+      where: { id: priceId },
+      include: { site: { select: { name: true } } },
+    }),
+    prisma.probeResult.findMany({
+      where: { siteModelPriceId: priceId },
+      orderBy: { probedAt: 'desc' },
+      take: 5,
+    }),
+  ])
   if (!p) notFound()
 
   return (
@@ -108,6 +116,35 @@ export default async function EditPricePage({
           </div>
         </div>
       </form>
+
+      <ProbeRunner
+        siteModelPriceId={priceId}
+        defaultModel={p.modelName.split('@')[0]}
+      />
+
+      {probeHistory.length > 0 && (
+        <div className='mj-card p-5'>
+          <h3 className='text-sm font-semibold text-stone-900 mb-3'>历史探针记录</h3>
+          <div className='space-y-2'>
+            {probeHistory.map((r) => (
+              <div key={r.id} className='flex items-center gap-3 text-xs border-t border-stone-100 pt-2'>
+                <span className='mj-mono text-stone-400'>
+                  {new Date(r.probedAt).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                </span>
+                <span className='font-medium text-stone-700'>{r.verdict}</span>
+                <span className='mj-mono text-stone-600'>{r.score}/100</span>
+                {r.tokenUsageRatio != null && (
+                  <span className='mj-mono text-stone-400'>ratio {r.tokenUsageRatio.toFixed(2)}</span>
+                )}
+                {r.latencyMs != null && (
+                  <span className='mj-mono text-stone-400'>{r.latencyMs}ms</span>
+                )}
+                <span className='text-stone-400'>{r.source}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

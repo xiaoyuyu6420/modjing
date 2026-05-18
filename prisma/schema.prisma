@@ -73,6 +73,7 @@ model SiteModelPrice {
 
   site          Site    @relation(fields: [siteId], references: [id])
   priceHistory  PriceHistory[]
+  probeResults  ProbeResult[]
 
   @@unique([siteId, modelName])
 }
@@ -84,6 +85,22 @@ model PriceHistory {
   recordedAt       DateTime @default(now())
 
   siteModelPrice   SiteModelPrice @relation(fields: [siteModelPriceId], references: [id])
+}
+
+model ProbeResult {
+  id              Int      @id @default(autoincrement())
+  siteModelPriceId Int
+  score           Float    // 0-100，越高越正常
+  verdict         String   // LEGITIMATE | SUSPICIOUS | FRAUD_DETECTED | INCONCLUSIVE
+  tokenUsageRatio Float?   // 实际返回 token / 请求 token
+  latencyMs       Int?
+  details         String   // 探针明细 JSON
+  source          String   @default("modjing") // modjing | api-verifier | llm-verify
+  probedAt        DateTime @default(now())
+
+  siteModelPrice  SiteModelPrice @relation(fields: [siteModelPriceId], references: [id])
+
+  @@index([siteModelPriceId, probedAt])
 }
 
 model HealthCheck {
