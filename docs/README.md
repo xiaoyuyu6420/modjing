@@ -1,60 +1,76 @@
-# 模镜文档索引
+# 模镜文档索引（Spec Harness）
 
-> 文档总览，快速定位需要的信息。
-
----
-
-## 必读文档
-
-| 文档 | 用途 | 谁需要看 |
-|------|------|----------|
-| [**架构总览**](architecture-overview.md) | 项目完整架构、技术栈、页面路由、数据模型、第三方项目 | 所有开发者 |
-| [**检测服务架构**](detection-architecture.md) | 检测服务外包设计、API 接口、部署方式 | 后端/运维 |
-| [**开发计划**](development-plan.md) | 4 周迭代计划、P0-P3 优先级 | 开发者/产品经理 |
+> 文档分四层。治理看 constitution，规格看 specs，参考资料看 reference，逆向调研看 research。
 
 ---
 
-## 参考资料
+## 🏛 Constitution（治理根本）
 
-| 文档 | 用途 | 谁需要看 |
-|------|------|----------|
-| [**hvoy 对标**](hvoy-vs-mojing.md) | 模镜 vs hvoy 功能对标、差异化优势 | 产品经理 |
-| [**数据源**](data-sources.md) | 种子数据来源、竞品参照、数据导入策略 | 数据/运营 |
-| [**探针引擎设计**](probe-engine.md) | 探针策略、题库设计、评分公式、伪装请求 | 算法/安全 |
-| [**逆向工程**](hvoy-reverse-engineering.md) | hvoy.ai 完整逆向分析（prompt、伪装头、判定逻辑） | 算法/安全 |
+项目原则、合规约束、不做什么、战略方向。**所有决策服从于此。**
+
+| 文档 | 用途 |
+|------|------|
+| [**constitution.md**](/.specify/memory/constitution.md) | 项目根本约束：立场、法律底线、禁止项、差异化方向、演进路径 |
+
+## 📋 Specs（规格，Spec-Kit 三件套）
+
+每个功能域一份 spec/plan/tasks。**改代码前先有 spec，review 通过才动。**
+
+| 规格域 | 状态 | 说明 |
+|--------|------|------|
+| [data-pipeline](../specs/data-pipeline/) | 🚧 待建 | hvoy 数据管线：schema 校验 + 消除重复 + 测试护栏 |
+
+## 📚 Reference（参考资料）
+
+架构、检测、探针、数据源、竞品、资产盘点。
+
+| 文档 | 用途 |
+|------|------|
+| [**project.md**](project.md) | **项目资产盘点**：技术栈、目录、7 张表、数据管线、页面清单、缺口 |
+| [architecture-overview.md](architecture-overview.md) | 完整架构、技术栈、页面路由、数据模型 |
+| [detection-architecture.md](detection-architecture.md) | 检测服务外包设计、API 接口、部署 |
+| [probe-engine.md](probe-engine.md) | 探针策略、题库设计、评分公式 |
+| [data-sources.md](data-sources.md) | 种子数据来源、竞品参照、导入策略 |
+| [hvoy-vs-mojing.md](hvoy-vs-mojing.md) | 模镜 vs hvoy 功能对标、差异化 |
+
+## 🔬 Research（逆向调研）
+
+hvoy.ai 逆向分析资料。
+
+| 文档 | 用途 |
+|------|------|
+| [hvoy-reverse-engineering.md](hvoy-reverse-engineering.md) | hvoy.ai 完整逆向（prompt、伪装头、判定逻辑） |
+| [hvoy-reverse-engineering-deep.md](hvoy-reverse-engineering-deep.md) | 深度逆向 |
+| [hvoy-reverse-engineering-final.md](hvoy-reverse-engineering-final.md) | 最终版逆向 |
+
+## 🗄 Legacy（历史，非现役）
+
+| 文档 | 状态 |
+|------|------|
+| [development-plan.md](development-plan.md) | ⚠️ 战略部分已被 constitution 取代；开发任务改走 specs/。保留作历史参考 |
 
 ---
 
-## 文档关系图
+## 阅读路径
 
 ```
-新开发者入门
+新人入门
     │
-    ├─→ architecture-overview.md (项目全貌)
-    │       ├─→ detection-architecture.md (检测服务)
-    │       └─→ development-plan.md (迭代计划)
+    ├─→ constitution.md (立场/约束)
     │
-    ├─→ hvoy-vs-mojing.md (竞品对标)
-    │       └─→ hvoy-reverse-engineering.md (技术细节)
+    ├─→ project.md (项目全貌)
+    │       ├─→ architecture-overview.md (架构细节)
+    │       └─→ data-pipeline spec (数据管线)
     │
-    └─→ probe-engine.md (探针设计)
-            └─→ data-sources.md (数据来源)
+    └─→ hvoy-vs-mojing.md (竞品)
+            └─→ hvoy-reverse-engineering*.md (技术逆向)
 ```
 
----
+## 工作约束
 
-## 文档状态
-
-| 文档 | 状态 | 说明 |
-|------|------|------|
-| architecture-overview.md | ✅ 最新 | 2026-06-17 创建 |
-| detection-architecture.md | ✅ 最新 | 已包含检测服务外包方案 |
-| development-plan.md | ✅ 最新 | Phase 0 已完成 |
-| hvoy-vs-mojing.md | ✅ 参考 | 对标 hvoy 功能清单 |
-| hvoy-reverse-engineering.md | ✅ 参考 | hvoy 技术逆向 |
-| probe-engine.md | ✅ 参考 | 探针引擎设计纲要 |
-| data-sources.md | ✅ 参考 | 数据源调研 |
+> 数据管线改动必须绿 `npm test` + `npm run build`（详见 [specs/data-pipeline](../specs/data-pipeline/)）。
+> Prompt 等源自 llm-verify（MIT）的内容须保留版权声明（constitution §2）。
 
 ---
 
-*文档最后更新：2026-06-17*
+*文档最后更新：2026-06-18（重组为 Spec Harness 结构）*

@@ -3,6 +3,8 @@
 > 规划时间：2026-06-16
 > 数据来源：hvoy.ai 全面逆向（见 `research/hvoy-intel/`）
 
+> ⚠️ **状态：legacy（2026-06-18 起）**。战略定位部分已被 [.specify/memory/constitution.md](/.specify/memory/constitution.md) 取代；后续开发任务改走 `specs/<name>/`（spec/plan/tasks）流程。本文保留作历史参考，**不作为现役开发依据**。
+
 ---
 
 ## 一、战略定位
