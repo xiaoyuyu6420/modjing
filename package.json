@@ -13,15 +13,16 @@
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:report": "playwright show-report",
-    "import-hvoy": "node scripts/import-hvoy.mjs",
-    "sync-hvoy": "node scripts/sync-hvoy.mjs",
-    "sync-hvoy:full": "node scripts/sync-hvoy.mjs --full"
+    "import-hvoy": "tsx scripts/import-hvoy.ts",
+    "sync-hvoy": "tsx scripts/sync-hvoy.ts",
+    "sync-hvoy:full": "tsx scripts/sync-hvoy.ts --full"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",
     "next": "^15.3.3",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0",
@@ -35,6 +36,7 @@
     "postcss": "^8.5.4",
     "prisma": "^6.9.0",
     "tailwindcss": "^4.1.7",
+    "tsx": "^4.22.4",
     "typescript": "^5.8.3",
     "vitest": "^4.1.9"
   }
