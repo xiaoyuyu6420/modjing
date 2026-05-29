@@ -1,0 +1,96 @@
+{
+  "updatedAt": "2026-06-16T04:04:45.199Z",
+  "channels": [
+    {
+      "relaySiteId": 39980,
+      "siteDomain": "lingsuan.top",
+      "site": "灵算",
+      "channel": "cx-pro",
+      "siteUrl": "https://lingsuan.top/register",
+      "modelKey": "gpt-5.5",
+      "lastResult": "pass",
+      "recentOnlineSeq": "111111111111111111111111",
+      "passRate": 100,
+      "onlineRate": 97.9,
+      "failRate": 0,
+      "avgLatencyS": 7.3,
+      "latencySuspicious": false,
+      "latestInputPriceCny": 1.2,
+      "priceTrend": [
+        {
+          "at": "2026-06-08T12:12:26.848+08:00",
+          "priceCny": 1.2
+        },
+        {
+          "at": "2026-06-13T17:05:39.390+08:00",
+          "priceCny": 1.4
+        },
+        {
+          "at": "2026-06-16T11:45:14.428+08:00",
+          "priceCny": 1.2
+        }
+      ],
+      "tokenUsageRatio": 0.9494,
+      "sampleCount": 47,
+      "weightedScore": 84.20377543337383,
+      "defaultRanking": 1,
+      "verificationType": "enterprise"
+    },
+    {
+      "relaySiteId": 39980,
+      "siteDomain": "lingsuan.top",
+      "site": "灵算",
+      "channel": "cx-稳定官池",
+      "siteUrl": "https://lingsuan.top/register",
+      "modelKey": "gpt-5.5",
+      "lastResult": "pass",
+      "recentOnlineSeq": "111111111111111111111111",
+      "passRate": 97.8,
+      "onlineRate": 97.9,
+      "failRate": 0.1,
+      "avgLatencyS": 8.6,
+      "latencySuspicious": false,
+      "latestInputPriceCny": 0.7,
+      "priceTrend": [
+        {
+          "at": "2026-06-05T21:54:53.357+08:00",
+          "priceCny": 0.7
+        },
+        {
+          "at": "2026-06-12T18:12:22.562+08:00",
+          "priceCny": 0.7
+        },
+        {
+          "at": "2026-06-12T23:12:24.250+08:00",
+          "priceCny": 0.7
+        },
+        {
+          "at": "2026-06-14T08:12:25.939+08:00",
+          "priceCny": 0.7
+        },
+        {
+          "at": "2026-06-15T12:12:20.520+08:00",
+          "priceCny": 0.7
+        },
+        {
+          "at": "2026-06-15T18:12:19.717+08:00",
+          "priceCny": 0.5
+        },
+        {
+          "at": "2026-06-15T23:12:21.028+08:00",
+          "priceCny": 0.6
+        },
+        {
+          "at": "2026-06-16T11:45:14.428+08:00",
+          "priceCny": 0.7
+        }
+      ],
+      "tokenUsageRatio": 0.9596,
+      "sampleCount": 47,
+      "weightedScore": 64.5063100412996,
+      "defaultRanking": 1,
+      "verificationType": "enterprise"
+    }
+  ],
+  "modelDisplayConfigs": []
+}
