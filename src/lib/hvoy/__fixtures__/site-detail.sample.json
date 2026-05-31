@@ -1,0 +1,59 @@
+{
+  "ok": true,
+  "site": {
+    "id": 40254,
+    "siteName": "3AToken",
+    "siteDomain": "aaatoken.cn",
+    "officialSiteEstablishedAt": "2026-05-10",
+    "signupUrl": "https://www.aaatoken.cn/sign-up",
+    "slug": "aaatokencn",
+    "siteDescription": "我们致力于打造一个高效的AI API聚合与运营平台。通过一个控制台，即可完成模型路由、配额管理、监控预警与多角色协作，彻底告别多套后台、重复对接的繁琐流程。\n核心优势：\n源头直供，极致低延迟：我们的Token直接对接运营商源头，省去中间环节，保障毫秒级响应。\n高稳定性，服务可用：多路由热备与智能降级机制，确保您的业务从不掉线。\n统一管控，高效协作：从模型调用到成本分摊，从权限划分到用量监控，所有操作集中完成。\n无论您是开发团队、AI创新部门还是企业IT负责人，3AAPI都能帮您节省数周对接时间，降低30%以上管理成本。",
+    "voteUpCount": 0,
+    "voteDownCount": 0,
+    "reviewSummary": {
+      "count": 0,
+      "average": null,
+      "breakdown": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0
+      }
+    }
+  },
+  "models": [
+    {
+      "modelKey": "qwen3.6-plus",
+      "channels": [
+        {
+          "channelName": "移动云_呼和浩特_openai",
+          "providerModelId": "qwen3.6-plus",
+          "primaryBilling": "token",
+          "hasProbe": false,
+          "latestInputPriceCny": 75,
+          "outputPriceCny": 75,
+          "cacheInputPriceCny": null,
+          "cacheCreatePriceCny": null,
+          "cacheCreatePrice1hCny": null,
+          "unitPriceCny": null,
+          "unitLabel": null,
+          "unitCount": null,
+          "priceTrend": [
+            {
+              "at": "2026-06-11T18:12:03.786+08:00",
+              "priceCny": 75
+            }
+          ],
+          "passRate": null,
+          "onlineRate": null,
+          "fakeRate": null,
+          "avgLatencyS": null,
+          "lastResult": null,
+          "recentOnlineSeq": "",
+          "lastProbedAt": "2026-06-16T12:12:03.843+08:00"
+        }
+      ]
+    }
+  ]
+}
