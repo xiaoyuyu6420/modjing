@@ -18,7 +18,8 @@
 
 | 规格域 | 状态 | 说明 |
 |--------|------|------|
-| [data-pipeline](../specs/data-pipeline/) | 🚧 待建 | hvoy 数据管线：schema 校验 + 消除重复 + 测试护栏 |
+| [data-pipeline](../specs/data-pipeline/) | ✅ 已实施 | hvoy 数据管线：schema 校验 + 消除重复 + 测试护栏 |
+| [probe-pool](../specs/probe-pool/) | 🚧 待建 | 探针池：版本化服务端私有池 + 公私分离 + 三层探针 + 计费指纹（#14/#15/#16） |
 
 ## 📚 Reference（参考资料）
 

@@ -70,6 +70,7 @@ model SiteModelPrice {
   sampleCount       Int?     // 探针样本数
   recentOnlineSeq   String?  // 最近 24 次探测的在线状态序列（1在线/0离线）
   verificationType  String?  // enterprise | basic | community 等验证类型
+  billingMultiplier Float?   // 最新计费倍率（供展示）
 
   site          Site    @relation(fields: [siteId], references: [id])
   priceHistory  PriceHistory[]
@@ -96,6 +97,10 @@ model ProbeResult {
   latencyMs       Int?
   details         String   // 探针明细 JSON
   source          String   @default("modjing") // modjing | api-verifier | llm-verify
+  poolVersion     String?  // 本次探针用的池版本
+  billingMultiplier Float?  // 计费倍率
+  billingFake     Boolean?  // billing 端点伪造/禁用
+  tier            String    @default("lightweight") // keyless | lightweight | deep
   probedAt        DateTime @default(now())
 
   siteModelPrice  SiteModelPrice @relation(fields: [siteModelPriceId], references: [id])
