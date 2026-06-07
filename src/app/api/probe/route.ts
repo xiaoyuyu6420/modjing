@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { runProbe } from '@/lib/probe'
+import { probeBilling } from '@/lib/probe-pool/billing'
+import { applyBillingPenalty } from '@/lib/probe-pool/scoring'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -50,26 +52,35 @@ export async function POST(req: NextRequest) {
   const urlToProbe = baseUrl || smp.site.url
 
   try {
-    const result = await runProbe({
-      baseUrl: urlToProbe,
-      apiKey,
-      model: modelToProbe,
-    })
+    const [result, billing] = await Promise.all([
+      runProbe({ baseUrl: urlToProbe, apiKey, model: modelToProbe }),
+      probeBilling({ baseUrl: urlToProbe, apiKey, model: modelToProbe, price: smp.price }).catch(() => null),
+    ])
+
+    const { score: finalScore, verdict: finalVerdict } = applyBillingPenalty(
+      result.score,
+      result.verdict,
+      billing,
+    )
 
     // 存入 ProbeResult
     const saved = await prisma.probeResult.create({
       data: {
         siteModelPriceId: smp.id,
-        score: result.score,
-        verdict: result.verdict,
+        score: finalScore,
+        verdict: finalVerdict,
         tokenUsageRatio: result.tokenUsageRatio,
         latencyMs: result.latencyMs,
         details: JSON.stringify(result.details),
         source: 'modjing',
+        poolVersion: result.poolVersion,
+        billingMultiplier: billing?.multiplier ?? null,
+        billingFake: billing?.fakeOrDisabled ?? null,
+        tier: 'lightweight',
       },
     })
 
-    return NextResponse.json({ ok: true, probeId: saved.id, ...result })
+    return NextResponse.json({ ok: true, probeId: saved.id, ...result, billing })
   } catch (e) {
     return NextResponse.json(
       { ok: false, error: e instanceof Error ? e.message : String(e) },
