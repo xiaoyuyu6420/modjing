@@ -11,3 +11,7 @@ next-env.d.ts
 coverage/
 test-results/
 .DS_Store
+
+# Sensitive / research materials (not for public repo)
+research/
+docs/hvoy-reverse-engineering*.md
