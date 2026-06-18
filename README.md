@@ -1,165 +1,246 @@
-# 模镜 Miro
+# 模镜 Miro — LLM Relay Review Platform
 
-> 中转站评测平台——做裁判，不做运动员。
-> 域名：modjing.com
+> An independent review platform for LLM API relay services. We evaluate, don't compete.
 
----
-
-## 核心开发原则
-
-**快速迭代 > 完美架构。**
-
-- 中转站市场变化快，站点今天活着明天暴毙，价格天天变
-- 网站必须能用 vibecoding（自然语言对话式编程）低成本修改
-- 宁可架构简单能快速改，不要架构完美但改不动
-- 每个页面、每个组件都应该是独立可替换的——改一个页面不影响其他
-- 数据字段可扩展：随时加新维度不影响现有数据
+<p align="center">
+  <a href="https://modjing.com">🌐 Live Demo</a> •
+  <a href="#tech-stack">Tech Stack</a> •
+  <a href="#features">Features</a> •
+  <a href="#architecture">Architecture</a>
+</p>
 
 ---
 
-## 技术框架
+## 🎯 What is Miro?
 
-| 层 | 选型 | 理由 |
-|----|------|------|
-| 前端 | **Next.js（App Router）** | 生态成熟、AI 生成代码命中率高、静态+动态混合 |
-| 样式 | **Tailwind CSS** | vibecoding 友好，AI 改样式最熟悉的方案 |
-| 后端 | **Next.js API Routes** | 不拆独立后端，减少部署复杂度 |
-| 数据库 | **SQLite** | 单文件、零配置、够用。量大了再迁移 |
-| ORM | **Prisma** | schema 即文档，AI 读写数据模型最方便 |
-| 部署 | **Vercel / 自建** | 先 Vercel 快速上线，后续可迁自建 |
+**Miro (模镜)** is an independent review and comparison platform for LLM API relay services ("中转站" in Chinese). Think of it as a "SimilarWeb for LLM proxies" — we collect, verify, and compare relay services across multiple dimensions so users can make informed decisions.
 
----
+> **The Problem:** LLM relay services are everywhere, but:
+> - Some sell "GPT-4o" but actually serve GPT-3.5 (model tampering)
+> - Prices fluctuate wildly with no transparency
+> - Services can go offline overnight with no warning
+> - No reliable source for cross-platform comparison
 
-## 页面规划
-
-| 页面 | 路由 | 优先级 | 说明 |
-|------|------|--------|------|
-| 首页 | `/` | P0 | 品牌入口 + 核心钩子 + 搜索框 |
-| 站点收录（按模型查） | `/models/[modelId]` | P0 | 核心功能：选模型 → 看所有中转站的对比表 |
-| 中转站列表 | `/sites` | P0 | 全部站点 + 筛选 + 排序 |
-| 站点详情 | `/sites/[siteId]` | P1 | 单个站点的详细信息 + 评价 |
-| 批量测速 | `/benchmark` | P1 | 用户输入 Key+端点 → 批量测速 → 排行榜 |
-| Token Plan | `/plans` | P2 | 全网套餐价格对比 |
-| 选型咨询 | `/consult` | P2 | 表单 → 微信引导 |
-| 公益站列表 | `/free` | P2 | 同站点列表结构，区分标记 |
-| 论坛 | `/forum` | P3 | 后期 |
-
-### 页面风格
-
-- 简洁工具型，参考 SimilarWeb / hvoy.ai 的风格
-- 深色模式优先（技术用户群体）
-- 数据密集型表格为主，不要花哨动画
-- 每个数据维度可点击排序，可组合筛选
-- 移动端适配（表格可横向滚动）
+**Miro solves this** with automated probing, price tracking, and a community-driven review system.
 
 ---
 
-## 数据模型
+## 🚀 Features
 
-### Site（中转站）
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| name | string | 站点名称 |
-| url | string | 站点地址 |
-| logo | string? | Logo URL |
-| description | text? | 站点介绍 |
-| announcement | text? | 站点公告 |
-| isFree | boolean | 是否公益站 |
-| status | enum | online / unstable / offline |
-| createdAt | datetime | 收录时间 |
-
-### SiteModelPrice（站点 × 模型 × 价格）
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| siteId | ref → Site | |
-| modelName | string | 如 `gpt-4o`, `claude-3.5-sonnet` |
-| price | float | 每百万 token 价格 |
-| priceUnit | string | 计费单位 |
-| multiplier | float | 倍率 |
-| afterSales | enum | `none` / `verify_once` / `days_30` / `lifetime` |
-| priceAnomaly | boolean | 价格异常标记（系统自动计算） |
-| detectedModel | string? | 实际检测到的模型（掺水检测） |
-| tampered | boolean? | 是否掺水（标称 ≠ 实际） |
-
-### PriceHistory（价格趋势）
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| siteModelPriceId | ref | |
-| price | float | |
-| recordedAt | datetime | |
-
-### HealthCheck（在线率/延迟）
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| siteId | ref → Site | |
-| latency | int | ms |
-| status | enum | ok / slow / timeout / error |
-| checkedAt | datetime | |
-
-### Review（用户评价）
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| siteId | ref → Site | |
-| author | string | 用户名 |
-| content | text | 评价内容 |
-| rating | int | 1-5 |
-| createdAt | datetime | |
+| Feature | Description |
+|---------|-------------|
+| **Price Comparison** | Compare model prices across 100+ relay services in real-time |
+| **Model Integrity Check** | Automated probing detects if a service is serving the model it claims (tampering detection) |
+| **Health Monitoring** | Track uptime, latency, and stability across all indexed services |
+| **Enterprise Explorer** | Filter by compliance (ISO 27001, MLPS), invoice support, SLA, and enterprise features |
+| **Admin Dashboard** | Full CRUD for sites, prices, notices, and probe execution |
+| **Data Pipeline** | Automated ingestion from external sources with schema validation and deduplication |
+| **Probe Pool** | Versioned, tiered probing system (keyless → lightweight → deep) with scoring |
 
 ---
 
-## 行业特性 → 设计约束
+## 🏗 Architecture
 
-> 中转站行业的关键特性，直接决定了数据模型设计。
-
-| 行业事实 | 设计响应 |
-|----------|----------|
-| 模型掉包（标称 gpt-4o 实际返回 3.5）普遍存在 | `tampered` + `detectedModel` 字段 + 掺水检测模块 |
-| 稳定性是用户第一痛点 | `HealthCheck` 表 + 定时健康检查任务 |
-| 价格异常低大概率在掺水 | `priceAnomaly` 自动标记（偏离均价超过阈值） |
-| 靠非正常渠道的站点随时暴毙 | `PriceHistory` 追踪趋势，价格突变 = 风险信号 |
-| 售后承诺分层（验一次/包X天/终身包）影响决策 | `afterSales` 枚举字段，列表页可筛选 |
-
----
-
-## 迭代计划
-
-### Phase 0：跑通数据（手动）
-
-- 人工收录 10 家中转站
-- 手动填入：价格、模型列表、售后承诺
-- 确认数据模型字段是否够用
-
-### Phase 1：MVP 上线
-
-- 首页 + 站点列表 + 按模型查询
-- Vercel 部署，域名解析到 modjing.com
-- 目标：能打开、能查、能看
-
-### Phase 2：自动化
-
-- 价格爬取脚本（定时跑）
-- 健康检查任务（定时 ping）
-- 掺水检测模块
-
-### Phase 3：社区 + 变现
-
-- 用户评价系统
-- 咨询窗口（表单 → 微信引导）
-- Token Plan 对比页
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Next.js App (Frontend)                   │
+│  ┌─────────┐ ┌──────────┐ ┌────────────┐ ┌──────────────┐  │
+│  │  Pages  │ │  Admin   │ │  API Routes│ │  Components │  │
+│  │ (18+)   │ │ Dashboard│ │ (REST)     │ │ (Reusable)  │  │
+│  └─────────┘ └──────────┘ └────────────┘ └──────────────┘  │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+┌─────────────────────▼───────────────────────────────────────┐
+│                    SQLite + Prisma ORM                      │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────────────┐  │
+│  │  Site    │ │  Price   │ │  Health  │ │  Probe     │  │
+│  │  (中转站) │ │  (模型价) │ │  (健康)  │ │  (探针)    │  │
+│  └──────────┘ └──────────┘ └──────────┘ └────────────┘  │
+└───────────────────────────────────────────────────────────┘
+                      │
+┌─────────────────────▼─────────────────────────────────────┐
+│              External Detection Services                   │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐    │
+│  │ llm-verify   │ │ APIVerifier  │ │ Self-hosted  │    │
+│  │ (deep check) │ │ (fast check) │ │ probe pool   │    │
+│  │    :8000     │ │    :8001     │ │    :3020     │    │
+│  └──────────────┘ └──────────────┘ └──────────────┘    │
+└───────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 选型咨询服务
+## 🛠 Tech Stack
 
-| 项 | 内容 |
-|----|------|
-| 入口 | `/consult` 页面 |
-| 表单字段 | 业务场景、预算范围、并发需求、技术要求 |
-| 流程 | 填表单 → 展示微信二维码 → 私域沟通 |
-| 定价 | 轻咨询按次 / 深度咨询按项目，私域内报价 |
-| 技术实现 | 纯静态表单 + 微信二维码图片，无需后端逻辑 |
+| Layer | Technology | Rationale |
+|-------|-----------|-----------|
+| Framework | **Next.js 15** (App Router) | Full-stack, SSR, API routes in one codebase |
+| Styling | **Tailwind CSS** | Utility-first, AI-friendly, rapid iteration |
+| Database | **SQLite** | Zero-config, file-based, easily portable |
+| ORM | **Prisma** | Schema-as-code, type-safe queries |
+| Testing | **Vitest** + **Playwright** | Unit + E2E coverage |
+| Validation | **Zod** | Runtime schema validation for data pipeline |
+| Deployment | **Vercel** | Zero-config, edge-ready |
+
+---
+
+## 📊 Data Model
+
+```prisma
+model Site {
+  id            Int             @id @default(autoincrement())
+  name          String
+  url           String
+  logo          String?
+  description   String?
+  status        String          // online | unstable | offline
+  isFree        Boolean         @default(false)
+  modelPrices   SiteModelPrice[]
+  healthChecks  HealthCheck[]
+  reviews       Review[]
+  // ... enterprise fields (compliance, SLA, invoice, etc.)
+}
+
+model SiteModelPrice {
+  id              Int     @id @default(autoincrement())
+  siteId          Int
+  modelName       String  // e.g., "gpt-4o", "claude-3.5-sonnet"
+  price           Float   // input price per million tokens
+  priceOutput     Float?  // output price
+  priceCached     Float?  // cached price
+  multiplier      Float   @default(1.0)
+  afterSales      String  // none | verify_once | days_30 | lifetime
+  tampered        Boolean @default(false)
+  passRate        Float?  // probe pass rate %
+  onlineRate      Float?  // uptime %
+  weightedScore   Float?  // composite score
+  // ...
+}
+```
+
+**Key Design Decisions:**
+- **Three-price model**: input / output / cached — reflects real-world pricing complexity
+- **Tampering detection**: `tampered` + `detectedModel` fields to catch model substitution fraud
+- **Probe scoring**: Composite weighted score combining pass rate, uptime, latency, and token usage ratio
+- **Enterprise compliance**: Full support for compliance tracking (ISO 27001, MLPS), invoice types, SLAs
+
+---
+
+## 🧪 Testing
+
+```bash
+# Unit tests
+npm test
+
+# E2E tests
+npm run e2e
+
+# Coverage
+npm run test:coverage
+```
+
+Test philosophy: **Spec-driven workflow** — every feature domain has a spec (requirements), a plan (design), and tasks (checklist). Green tests + green build = done.
+
+---
+
+## 📁 Project Structure
+
+```
+modjing/
+├── src/
+│   ├── app/                 # Next.js App Router pages
+│   │   ├── (dashboard)/     # Admin route group (login-protected)
+│   │   ├── api/             # REST API routes
+│   │   ├── benchmark/       # User-facing benchmark tool
+│   │   ├── enterprise/      # Enterprise service explorer
+│   │   ├── leaderboard/     # Ranking by model
+│   │   ├── models/          # Model-centric comparison
+│   │   ├── sites/           # Site-centric details
+│   │   └── ...
+│   ├── components/          # Reusable UI components
+│   ├── lib/                 # Core business logic
+│   │   ├── prisma.ts        # Database singleton
+│   │   ├── probe.ts         # Probe orchestration
+│   │   ├── probe-pool/      # Tiered probe pool system
+│   │   ├── hvoy/            # Data pipeline (import + sync)
+│   │   └── admin-auth.ts    # Admin authentication
+│   └── ...
+├── prisma/
+│   └── schema.prisma        # Single source of truth for data model
+├── specs/                   # Spec-driven docs (spec / plan / tasks)
+├── docs/                    # Architecture docs
+├── scripts/                 # Data import/sync scripts
+├── e2e/                     # Playwright tests
+└── ...
+```
+
+---
+
+## 🚦 Getting Started
+
+```bash
+# Clone
+git clone https://github.com/munich/modjing.git
+cd modjing
+
+# Install dependencies
+npm install
+
+# Set up database (SQLite — zero config)
+npx prisma db push
+
+# Seed data (optional)
+npx prisma studio
+
+# Run dev server
+npm run dev
+# → http://localhost:3020
+```
+
+---
+
+## 🌐 Pages Overview
+
+| Page | Route | Description |
+|------|-------|-------------|
+| Home | `/` | Brand entry + model search + feature highlights |
+| Sites | `/sites` | All relay services with filter & sort |
+| Site Detail | `/sites/[id]` | Full info, prices, reviews, health history |
+| Models | `/models` | Model catalog with cross-site price comparison |
+| Model Detail | `/models/[id]` | Per-model comparison table across all sites |
+| Leaderboard | `/leaderboard` | Ranked lists by performance metrics |
+| Enterprise | `/enterprise` | Filter services by enterprise compliance features |
+| Benchmark | `/benchmark` | User-input key + endpoint for manual testing |
+| Plans | `/plans` | Token plan pricing comparison |
+| Notices | `/notices` | Aggregated service announcements |
+| Admin | `/admin` | Full management dashboard (password-protected) |
+
+---
+
+## 🧠 Key Insights (What I Learned)
+
+1. **Model tampering is real and widespread** — automated probing is essential, not optional.
+2. **Price alone is a bad signal** — combine with pass rate, uptime, and token usage ratio for a composite score.
+3. **Enterprise buyers need different data** — compliance, SLA, invoice support are decision factors, not just price.
+4. **Spec-driven development works** — writing spec → plan → tasks before coding prevents scope creep and keeps the codebase focused.
+5. **AI-assisted coding (vibe coding) is a force multiplier** — but only with clear architecture boundaries and test guards.
+
+---
+
+## 📝 License
+
+[MIT](./LICENSE)
+
+---
+
+## 🙋 About the Author
+
+Built by [Munich](https://github.com/munich) as a portfolio project showcasing full-stack development, data pipeline architecture, and test-driven workflows with AI-assisted development.
+
+> "做裁判，不做运动员。" — We evaluate, don't compete.
+
+---
+
+<p align="center">
+  <sub>⭐ If you find this interesting, give it a star!</sub>
+</p>
