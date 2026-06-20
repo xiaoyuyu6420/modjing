@@ -1,21 +1,48 @@
-MIT License
+版权所有 © 2026 Munich。保留所有权利。
 
-Copyright (c) 2026 Munich
+本项目（模镜 / Miro，包括其全部源代码、文档及相关材料）依据
+《知识共享 署名-非商业性使用-相同方式共享 4.0 国际公共许可证》
+（Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+Public License，简称 "CC BY-NC-SA 4.0"）提供。
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+                    CC BY-NC-SA 4.0 摘要（非法律文本）
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+在以下条件下，你可以自由地复制、再分发、改编本作品：
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+  署名（BY）            你必须给出适当的署名，提供指向本许可证的链接，
+                        同时标明是否（对原始作品）作了修改。你可以用任何
+                        合理的方式来署名，但不得以任何方式暗示许可人
+                        为你或你的使用背书。
+
+  非商业性使用（NC）   你不得将本作品用于商业目的。
+
+                        "商业目的"是指主要为获取商业优势或金钱报酬
+                        的使用，包括但不限于：销售、租赁、付费 SaaS、
+                        嵌入商业产品或服务、内部商业工具、广告支持的服务，
+                        以及任何直接或间接产生收入的使用。
+
+  相同方式共享（SA）   如果你再混合、转换或基于本作品创作，你必须基于
+                        与原先相同的协议（CC BY-NC-SA 4.0）分发你的
+                        贡献作品。
+
+                        没有附加限制              你不得适用法律术语或技术
+                        措施从而在法律上限制他人进行本许可证已允许的事情。
+
+----------------------------------------------------------------------
+
+                        完整许可证文本
+
+本许可证的完整法律文本（英文原件为准）请见：
+
+    https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+中文参考译本（仅供参考，以英文原件为准）：
+
+    https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh
+
+----------------------------------------------------------------------
+
+                        免责声明
+
+本作品按"现状"提供（AS IS），不附带任何明示或暗示的担保。在任何
+情况下，版权持有人均不对因使用本作品而产生的任何损失或责任负责。
