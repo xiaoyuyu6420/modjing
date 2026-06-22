@@ -229,7 +229,9 @@ npm run dev
 
 ## 📝 License
 
-[MIT](./LICENSE)
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) — **非商业用途**。
+
+本作品采用「署名-非商业性使用-相同方式共享 4.0 国际」许可协议。你可以自由地使用、分享和改编，但**不得用于任何商业目的**，且衍生作品须以相同协议发布。详见 [LICENSE](./LICENSE)。
 
 ---
 
